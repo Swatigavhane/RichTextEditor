@@ -1,6 +1,6 @@
-import { createEmptyDocument, serializeDocument } from './model';
+import { createEmptyDocument, serializeDocument } from '../model';
 
-export default function App() {
+export default function EditorStarter() {
     const documentModel = createEmptyDocument();
 
     return (
