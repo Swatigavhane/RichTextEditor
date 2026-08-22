@@ -1,6 +1,7 @@
 import Block from '../Block/Block';
 import Toolbar from '../Toolbar/Toolbar';
 import { useEditor } from './useEditor';
+import type { Document } from '../../model';
 
 export default function Editor() {
     const editor = useEditor();
@@ -17,7 +18,7 @@ export default function Editor() {
                     onToggleItalic={editor.toggleItalic}
                     onInsertLink={editor.insertLink}
                 />
-                {editor.documentModel.blocks.map((block) => (
+                {editor.documentModel.blocks.map((block: Document['blocks'][number]) => (
                     <Block key={block.id} block={block} />
                 ))}
                 <pre className="document-preview">{editor.serializedDocument}</pre>

@@ -1,4 +1,4 @@
-import type { Mark, TextRun } from './types';
+import type { Mark, TextRun } from './index';
 
 const sameMarks = (left: Mark[], right: Mark[]): boolean =>
     left.length === right.length && left.every((mark, index) => JSON.stringify(mark) === JSON.stringify(right[index]));

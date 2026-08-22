@@ -6,4 +6,4 @@ export {
     getDocumentText,
     normalizeDocument,
     serializeDocument,
-} from '../features/editor/model';
+} from './index';

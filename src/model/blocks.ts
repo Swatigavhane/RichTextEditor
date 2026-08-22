@@ -1,4 +1,4 @@
-import type { Block, Mark, TextRun } from './types';
+import type { Block, Mark, TextRun } from './index';
 import { mergeAdjacentRuns, splitRunAt } from './runs';
 
 export const splitBlock = (block: Block, offset: number): [Block, Block] => {

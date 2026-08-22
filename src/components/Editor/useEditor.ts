@@ -11,7 +11,7 @@ export const useEditor = () => {
     const activeMarks = useMemo(() => [], []);
 
     const toggle = (mark: Mark) => {
-        setDocumentModel((currentDocument) => toggleMark(currentDocument, selection, mark));
+        setDocumentModel((currentDocument: Document) => toggleMark(currentDocument, selection, mark));
     };
 
     return {
