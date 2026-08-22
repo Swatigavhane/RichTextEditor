@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { getActiveMarks, toggleMark } from './marks';
-import { normalizeDocument } from './document';
+import { getActiveMarks, toggleMark } from './index';
+import { normalizeDocument } from '../document';
 
 describe('mark helpers', () => {
   it('toggles bold across a selection', () => {

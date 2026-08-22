@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mergeAdjacentRuns, normalizeRuns, splitRunAt } from './runs';
+import { mergeAdjacentRuns, normalizeRuns, splitRunAt } from './index';
 
 describe('run helpers', () => {
   it('splits a run at an offset', () => {

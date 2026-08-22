@@ -1,8 +1,40 @@
-export type {
-  InlineMarkType,
-  LinkMark,
-  InlineMark as Mark,
-  TextSpan as TextRun,
-  ParagraphBlock as Block,
-  DocumentModel as Document,
-} from './index';
+import type { Block, ParagraphBlock, TextSpan } from './blocks/blocks.types';
+
+export type InlineMarkType = 'bold' | 'italic';
+
+export interface LinkMark {
+    type: 'link';
+    href: string;
+}
+
+export type InlineMark = InlineMarkType | LinkMark;
+
+export interface DocumentModel {
+    blocks: Block[];
+}
+
+export interface SelectionPoint {
+    blockId: string;
+    offset: number;
+}
+
+export interface SelectionRange {
+    anchor: SelectionPoint;
+    focus: SelectionPoint;
+}
+
+export interface LinearSelectionRange {
+    anchor: number;
+    focus: number;
+    start: number;
+    end: number;
+    isBackward: boolean;
+}
+
+export type MarkCoverage = 'absent' | 'partial' | 'present';
+
+export type Mark = InlineMark;
+export type Document = DocumentModel;
+
+export type { Block, ParagraphBlock, TextSpan } from './blocks/blocks.types';
+export type TextRun = TextSpan;
