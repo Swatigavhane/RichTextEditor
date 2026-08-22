@@ -1,1 +1,1 @@
-export * from './runs';
+export { splitRunAt, mergeAdjacentRuns, normalizeRuns } from './runs';

@@ -1,1 +1,9 @@
-export * from './marks';
+export {
+	getMarkCoverage,
+	toggleInlineMark,
+	applyInlineMark,
+	clearInlineMark,
+	getSelectionMarks,
+	deleteSelectionRange,
+	replaceSelectionWithText,
+} from './marks';

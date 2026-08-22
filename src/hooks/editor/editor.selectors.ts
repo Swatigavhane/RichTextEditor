@@ -1,10 +1,10 @@
-import { getActiveMarks, serializeDocument } from '../../model';
+import { getSelectionMarks, serializeDocument } from '../../model';
 import type { ActiveMarkId } from '../../editor-core/commands';
 import { TOOLBAR_COMMANDS } from '../../editor-core/commands';
 import type { ToolbarCommand, EditorState } from './editor.types';
 
 export const selectActiveMarks = (state: EditorState): ActiveMarkId[] =>
-  getActiveMarks(state.documentModel, state.selection).map((mark) =>
+  getSelectionMarks(state.documentModel, state.selection).map((mark) =>
     typeof mark === 'string' ? mark : mark.type,
   );
 

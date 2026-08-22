@@ -1,5 +1,5 @@
 import { buildSelection } from '../../utils/buildSelection';
-import { createEmptyDocument, toggleMark } from '../../model';
+import { createEmptyDocument, toggleInlineMark } from '../../model';
 import { TOOLBAR_COMMANDS } from '../../editor-core/commands';
 import type { EditorAction, EditorState } from './editor.types';
 
@@ -22,10 +22,10 @@ const withSelection = (
 
 const withToggledMark = (
   state: EditorState,
-  mark: Parameters<typeof toggleMark>[2],
+  mark: Parameters<typeof toggleInlineMark>[2],
 ): EditorState => ({
   ...state,
-  documentModel: toggleMark(state.documentModel, state.selection, mark),
+  documentModel: toggleInlineMark(state.documentModel, state.selection, mark),
 });
 
 export const createInitialState = (): EditorState => ({

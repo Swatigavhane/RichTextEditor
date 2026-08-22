@@ -1,1 +1,1 @@
-export * from './blocks';
+export { splitBlock, mergeBlocks } from './blocks';

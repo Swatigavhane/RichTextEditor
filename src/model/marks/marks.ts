@@ -97,6 +97,3 @@ export const getSelectionMarks = (
 
   return Array.from(collectedMarks.values());
 };
-
-export const getActiveMarks = getSelectionMarks;
-export const toggleMark = toggleInlineMark;

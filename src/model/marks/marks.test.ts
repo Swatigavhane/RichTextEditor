@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getActiveMarks, toggleMark } from './index';
+import { getSelectionMarks, toggleInlineMark } from './marks';
 import { normalizeDocument } from '../document';
 
 describe('mark helpers', () => {
@@ -15,7 +15,7 @@ describe('mark helpers', () => {
     });
 
     expect(
-      toggleMark(
+      toggleInlineMark(
         documentModel,
         {
           anchor: { blockId: 'block-1', offset: 0 },
@@ -38,7 +38,7 @@ describe('mark helpers', () => {
     });
 
     expect(
-      getActiveMarks(documentModel, {
+      getSelectionMarks(documentModel, {
         anchor: { blockId: 'block-1', offset: 0 },
         focus: { blockId: 'block-1', offset: 5 },
       }),
