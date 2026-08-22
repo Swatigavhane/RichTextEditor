@@ -1,4 +1,4 @@
-import type { Mark } from '../model';
+import type { Mark } from '../model/types';
 
 export type ActiveMarkId = 'bold' | 'italic' | 'link';
 

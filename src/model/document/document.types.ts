@@ -1,1 +1,0 @@
-export type { DocumentModel, InlineMark, ParagraphBlock, TextSpan } from '../types';

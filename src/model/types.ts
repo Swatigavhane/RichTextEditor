@@ -1,5 +1,3 @@
-import type { Block, ParagraphBlock, TextSpan } from './blocks/blocks.types';
-
 export type InlineMarkType = 'bold' | 'italic';
 
 export interface LinkMark {
@@ -8,6 +6,19 @@ export interface LinkMark {
 }
 
 export type InlineMark = InlineMarkType | LinkMark;
+
+export interface TextSpan {
+  text: string;
+  marks: InlineMark[];
+}
+
+export interface ParagraphBlock {
+  type: 'paragraph';
+  id: string;
+  children: TextSpan[];
+}
+
+export type Block = ParagraphBlock;
 
 export interface DocumentModel {
   blocks: Block[];
@@ -36,5 +47,4 @@ export type MarkCoverage = 'absent' | 'partial' | 'present';
 export type Mark = InlineMark;
 export type Document = DocumentModel;
 
-export type { Block, ParagraphBlock, TextSpan } from './blocks/blocks.types';
 export type TextRun = TextSpan;

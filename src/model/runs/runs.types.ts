@@ -1,1 +1,0 @@
-export type { Mark, TextRun } from '../types';

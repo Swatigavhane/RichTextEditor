@@ -1,8 +1,11 @@
-import type { Mark, TextRun } from './runs.types';
+import type { Mark, TextRun } from '../types';
+
+const markSignature = (mark: Mark): string =>
+  typeof mark === 'string' ? mark : `${mark.type}:${mark.href}`;
 
 const sameMarks = (left: Mark[], right: Mark[]): boolean =>
   left.length === right.length &&
-  left.every((mark, index) => JSON.stringify(mark) === JSON.stringify(right[index]));
+  left.every((mark, index) => markSignature(mark) === markSignature(right[index]));
 
 export const splitRunAt = (run: TextRun, offset: number): [TextRun, TextRun] => [
   { text: run.text.slice(0, offset), marks: [...run.marks] },

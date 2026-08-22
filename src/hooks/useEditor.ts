@@ -1,6 +1,6 @@
 import { useMemo, useReducer } from 'react';
 import type { EditorSelection } from '../editor-core/selection';
-import type { EditorCommandId } from './constants';
+import type { EditorCommandId } from '../editor-core/commands';
 import {
   createInitialState,
   editorReducer,
@@ -10,11 +10,14 @@ import {
 } from './editor';
 
 export const useEditor = () => {
-  const [state, dispatch] = useReducer(editorReducer, undefined, createInitialState);
+  const [editorState, dispatch] = useReducer(editorReducer, undefined, createInitialState);
 
-  const activeMarks = useMemo(() => selectActiveMarks(state), [state]);
+  const activeMarks = useMemo(() => selectActiveMarks(editorState), [editorState]);
 
-  const serializedDocument = useMemo(() => selectSerializedDocument(state), [state]);
+  const serializedDocument = useMemo(
+    () => selectSerializedDocument(editorState),
+    [editorState],
+  );
 
   const toolbarCommands = useMemo(() => selectToolbarCommands(activeMarks), [activeMarks]);
 
@@ -27,8 +30,8 @@ export const useEditor = () => {
   };
 
   return {
-    documentModel: state.documentModel,
-    selection: state.selection,
+    documentModel: editorState.documentModel,
+    selection: editorState.selection,
     activeMarks,
     toolbarCommands,
     serializedDocument,

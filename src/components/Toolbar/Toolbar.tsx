@@ -1,10 +1,5 @@
-import type { EditorCommandId } from '../../hooks/constants';
-
-type ToolbarCommand = {
-  id: EditorCommandId;
-  label: string;
-  isActive: boolean;
-};
+import type { EditorCommandId } from '../../editor-core/commands';
+import type { ToolbarCommand } from '../../hooks/editor';
 
 type ToolbarProps = {
   commands: ToolbarCommand[];

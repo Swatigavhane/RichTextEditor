@@ -16,6 +16,34 @@ describe('block helpers', () => {
     expect(right.children).toEqual([{ text: 'llo', marks: [] }]);
   });
 
+  it('clamps split offset below zero', () => {
+    const [left, right] = splitBlock(
+      {
+        type: 'paragraph',
+        id: 'block-1',
+        children: [{ text: 'Hello', marks: [] }],
+      },
+      -5,
+    );
+
+    expect(left.children).toEqual([]);
+    expect(right.children).toEqual([{ text: 'Hello', marks: [] }]);
+  });
+
+  it('clamps split offset beyond block length', () => {
+    const [left, right] = splitBlock(
+      {
+        type: 'paragraph',
+        id: 'block-1',
+        children: [{ text: 'Hello', marks: [] }],
+      },
+      99,
+    );
+
+    expect(left.children).toEqual([{ text: 'Hello', marks: [] }]);
+    expect(right.children).toEqual([]);
+  });
+
   it('merges two blocks together', () => {
     expect(
       mergeBlocks(
@@ -35,5 +63,25 @@ describe('block helpers', () => {
       id: 'block-1',
       children: [{ text: 'Hello', marks: [] }],
     });
+  });
+
+  it('does not mutate original blocks while merging', () => {
+    const left = {
+      type: 'paragraph' as const,
+      id: 'block-1',
+      children: [{ text: 'Hello', marks: ['bold' as const] }],
+    };
+    const right = {
+      type: 'paragraph' as const,
+      id: 'block-2',
+      children: [{ text: ' world', marks: [] }],
+    };
+
+    const merged = mergeBlocks(left, right);
+
+    merged.children[0].marks.push('italic');
+
+    expect(left.children[0].marks).toEqual(['bold']);
+    expect(merged.children[0].marks).toEqual(['bold', 'italic']);
   });
 });

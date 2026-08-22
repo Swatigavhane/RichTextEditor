@@ -4,7 +4,7 @@ import { useEditor } from '../../hooks/useEditor';
 import type { Document } from '../../model';
 
 export default function Editor() {
-  const editor = useEditor();
+  const editorViewModel = useEditor();
 
   return (
     <main className="app-shell">
@@ -12,11 +12,14 @@ export default function Editor() {
         <p className="eyebrow">React + TypeScript</p>
         <h1>Rich Text Editor</h1>
         <p className="lead">This layout now follows the requested folder structure.</p>
-        <Toolbar commands={editor.toolbarCommands} onRunCommand={editor.runCommand} />
-        {editor.documentModel.blocks.map((block: Document['blocks'][number]) => (
+        <Toolbar
+          commands={editorViewModel.toolbarCommands}
+          onRunCommand={editorViewModel.runCommand}
+        />
+        {editorViewModel.documentModel.blocks.map((block: Document['blocks'][number]) => (
           <Block key={block.id} block={block} />
         ))}
-        <pre className="document-preview">{editor.serializedDocument}</pre>
+        <pre className="document-preview">{editorViewModel.serializedDocument}</pre>
       </section>
     </main>
   );

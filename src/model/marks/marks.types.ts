@@ -1,1 +1,0 @@
-export type { Block, Document, InlineMark, MarkCoverage, SelectionRange, TextSpan } from '../types';

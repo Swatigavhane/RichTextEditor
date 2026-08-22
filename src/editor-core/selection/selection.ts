@@ -2,17 +2,24 @@ import type { Document } from '../../model/types';
 import { getBlockTextLength, getDocumentText, createParagraph } from '../../model/document';
 import type { EditorSelection, LinearSelection, SelectionPoint } from './types';
 
+const DEFAULT_BLOCK_ID = 'block-1';
+const BLOCK_SEPARATOR_LENGTH = 1;
+
 const clampOffset = (offset: number, minimum: number, maximum: number): number =>
   Math.min(Math.max(offset, minimum), maximum);
 
+const getBlockOrDefault = (documentModel: Document, blockIndex: number) =>
+  documentModel.blocks[blockIndex] ?? createParagraph(DEFAULT_BLOCK_ID);
+
 const getBlockStartOffset = (documentModel: Document, blockIndex: number): number => {
   let offset = 0;
+  const lastIndex = documentModel.blocks.length - 1;
 
   for (let index = 0; index < blockIndex; index += 1) {
     offset += getBlockTextLength(documentModel.blocks[index]);
 
-    if (index < documentModel.blocks.length - 1) {
-      offset += 1;
+    if (index < lastIndex) {
+      offset += BLOCK_SEPARATOR_LENGTH;
     }
   }
 
@@ -30,7 +37,7 @@ export const clampSelectionPoint = (
   point: SelectionPoint,
 ): SelectionPoint => {
   const blockIndex = getBlockIndexById(documentModel, point.blockId);
-  const block = documentModel.blocks[blockIndex] ?? createParagraph('block-1');
+  const block = getBlockOrDefault(documentModel, blockIndex);
   const blockLength = getBlockTextLength(block);
 
   return {
@@ -57,7 +64,7 @@ export const selectionPointToLinearOffset = (
 ): number => {
   const normalizedPoint = clampSelectionPoint(documentModel, point);
   const blockIndex = getBlockIndexById(documentModel, normalizedPoint.blockId);
-  const block = documentModel.blocks[blockIndex] ?? createParagraph('block-1');
+  const block = getBlockOrDefault(documentModel, blockIndex);
 
   return (
     getBlockStartOffset(documentModel, blockIndex) +
@@ -84,25 +91,25 @@ export const linearOffsetToSelectionPoint = (
   documentModel: Document,
   linearOffset: number,
 ): SelectionPoint => {
-  const totalLength = getDocumentText(documentModel).length;
-  let remainingOffset = clampOffset(linearOffset, 0, totalLength);
+  const documentLength = getDocumentText(documentModel).length;
+  let remainingOffset = clampOffset(linearOffset, 0, documentLength);
+  const lastIndex = documentModel.blocks.length - 1;
 
   for (let blockIndex = 0; blockIndex < documentModel.blocks.length; blockIndex += 1) {
     const block = documentModel.blocks[blockIndex];
     const blockLength = getBlockTextLength(block);
 
-    if (remainingOffset <= blockLength || blockIndex === documentModel.blocks.length - 1) {
+    if (remainingOffset <= blockLength || blockIndex === lastIndex) {
       return {
         blockId: block.id,
         offset: clampOffset(remainingOffset, 0, blockLength),
       };
     }
 
-    remainingOffset -= blockLength + 1;
+    remainingOffset -= blockLength + BLOCK_SEPARATOR_LENGTH;
   }
 
-  const lastBlock =
-    documentModel.blocks[documentModel.blocks.length - 1] ?? createParagraph('block-1');
+  const lastBlock = getBlockOrDefault(documentModel, lastIndex);
 
   return {
     blockId: lastBlock.id,

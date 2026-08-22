@@ -4,28 +4,43 @@ export type TextDiff = {
   insertedText: string;
 };
 
-export const diffText = (beforeText: string, afterText: string): TextDiff => {
-  let start = 0;
+const findCommonPrefixLength = (beforeText: string, afterText: string): number => {
+  let prefixLength = 0;
 
   while (
-    start < beforeText.length &&
-    start < afterText.length &&
-    beforeText[start] === afterText[start]
+    prefixLength < beforeText.length &&
+    prefixLength < afterText.length &&
+    beforeText[prefixLength] === afterText[prefixLength]
   ) {
-    start += 1;
+    prefixLength += 1;
   }
 
+  return prefixLength;
+};
+
+const trimCommonSuffix = (
+  beforeText: string,
+  afterText: string,
+  fromIndex: number,
+): { beforeEnd: number; afterEnd: number } => {
   let beforeEnd = beforeText.length;
   let afterEnd = afterText.length;
 
   while (
-    beforeEnd > start &&
-    afterEnd > start &&
+    beforeEnd > fromIndex &&
+    afterEnd > fromIndex &&
     beforeText[beforeEnd - 1] === afterText[afterEnd - 1]
   ) {
     beforeEnd -= 1;
     afterEnd -= 1;
   }
+
+  return { beforeEnd, afterEnd };
+};
+
+export const diffText = (beforeText: string, afterText: string): TextDiff => {
+  const start = findCommonPrefixLength(beforeText, afterText);
+  const { beforeEnd, afterEnd } = trimCommonSuffix(beforeText, afterText, start);
 
   return {
     start,

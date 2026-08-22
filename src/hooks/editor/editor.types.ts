@@ -1,6 +1,6 @@
 import type { EditorSelection } from '../../editor-core/selection';
+import type { EditorCommandId } from '../../editor-core/commands';
 import type { Document, Mark } from '../../model';
-import type { EditorCommandId } from '../constants';
 
 export type ToolbarCommand = {
   id: EditorCommandId;

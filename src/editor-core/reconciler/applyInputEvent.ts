@@ -9,6 +9,27 @@ export type InputEventChange = {
   selection: EditorSelection;
 };
 
+const isEmptyBlock = (block: Document['blocks'][number] | undefined): boolean =>
+  Boolean(block && block.children.length > 0 && block.children.every((run) => run.text.length === 0));
+
+const replaceFirstBlockText = (documentModel: Document, text: string): Document => {
+  const firstBlock = documentModel.blocks[0];
+
+  if (!firstBlock) {
+    return documentModel;
+  }
+
+  return {
+    blocks: [
+      {
+        ...firstBlock,
+        children: [{ text, marks: [] }],
+      },
+      ...documentModel.blocks.slice(1),
+    ],
+  };
+};
+
 export const applyInputEvent = (documentModel: Document, change: InputEventChange): Document => {
   const textDiff = diffText(change.beforeText, change.afterText);
   const nextDocument = replaceSelectionWithText(
@@ -18,23 +39,10 @@ export const applyInputEvent = (documentModel: Document, change: InputEventChang
     [],
   ).document;
 
-  const firstBlock = nextDocument.blocks[0];
-  const firstBlockIsEmpty = Boolean(
-    firstBlock &&
-    firstBlock.children.length > 0 &&
-    firstBlock.children.every((run) => run.text.length === 0),
-  );
+  const firstBlockIsEmpty = isEmptyBlock(nextDocument.blocks[0]);
 
   if (textDiff.insertedText.length > 0 && firstBlockIsEmpty) {
-    return {
-      blocks: [
-        {
-          ...firstBlock,
-          children: [{ text: textDiff.insertedText, marks: [] }],
-        },
-        ...nextDocument.blocks.slice(1),
-      ],
-    };
+    return replaceFirstBlockText(nextDocument, textDiff.insertedText);
   }
 
   return nextDocument;
