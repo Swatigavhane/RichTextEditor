@@ -1,5 +1,5 @@
-import type { Document } from '../model';
-import { replaceSelectionWithText } from '../model';
+import type { Document } from '../../model';
+import { replaceSelectionWithText } from '../../model';
 import type { EditorSelection } from '../selection';
 import { diffText } from './diffText';
 

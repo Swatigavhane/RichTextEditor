@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
-import { createEmptyDocument, serializeDocument, toggleMark } from '../../model';
-import type { Document, Mark } from '../../model';
-import type { EditorSelection } from '../../selection';
-import { buildSelection } from '../../test-utils/buildSelection';
+import { createEmptyDocument, serializeDocument, toggleMark } from '../model';
+import type { Document, Mark } from '../model';
+import type { EditorSelection } from '../editor-core/selection';
+import { buildSelection } from '../utils/buildSelection';
 
 export const useEditor = () => {
     const [documentModel, setDocumentModel] = useState<Document>(() => createEmptyDocument());

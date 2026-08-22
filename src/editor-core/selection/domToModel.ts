@@ -1,5 +1,5 @@
-import type { Document } from '../model';
-import { selectionRangeToLinearRange } from '../model';
+import type { Document } from '../../model';
+import { selectionRangeToLinearRange } from '../../model';
 import type { EditorSelection, LinearSelection } from './types';
 
 export const domToModelSelection = (documentModel: Document, selection: EditorSelection): LinearSelection => {

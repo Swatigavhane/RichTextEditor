@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createEmptyDocument } from '../model';
-import { buildSelection } from '../test-utils/buildSelection';
+import { createEmptyDocument } from '../../model';
+import { buildSelection } from '../../utils/buildSelection';
 import { applyInputEvent } from './applyInputEvent';
 
 describe('apply input event', () => {

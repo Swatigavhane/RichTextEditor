@@ -1,6 +1,6 @@
 import Block from '../Block/Block';
 import Toolbar from '../Toolbar/Toolbar';
-import { useEditor } from './useEditor';
+import { useEditor } from '../../hooks/useEditor';
 import type { Document } from '../../model';
 
 export default function Editor() {

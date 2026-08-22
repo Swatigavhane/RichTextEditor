@@ -1,4 +1,4 @@
-import type { EditorSelection } from '../selection';
+import type { EditorSelection } from '../editor-core/selection';
 
 export const buildSelection = (
     anchorBlockId: string,

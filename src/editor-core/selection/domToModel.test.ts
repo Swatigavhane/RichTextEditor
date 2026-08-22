@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createEmptyDocument } from '../model';
+import { createEmptyDocument } from '../../model';
 import { domToModelSelection } from './domToModel';
 
 describe('dom to model selection', () => {
