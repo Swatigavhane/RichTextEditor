@@ -6,18 +6,18 @@ Basic React starter for building a rich text editor with Vite.
 
 1. Install dependencies:
 
-	```bash
-	npm install
-	```
+   ```bash
+   npm install
+   ```
 
 2. Start the development server:
 
-	```bash
-	npm run dev
-	```
+   ```bash
+   npm run dev
+   ```
 
 3. Create a production build:
 
-	```bash
-	npm run build
-	```
+   ```bash
+   npm run build
+   ```

@@ -1,5 +1,5 @@
 export {
-    getMarkCoverage,
-    getSelectionMarks as getActiveMarks,
-    toggleInlineMark as toggleMark,
+  getMarkCoverage,
+  getSelectionMarks as getActiveMarks,
+  toggleInlineMark as toggleMark,
 } from './index';

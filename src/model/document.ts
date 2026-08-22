@@ -1,9 +1,9 @@
 export {
-    createEmptyDocument,
-    createParagraph,
-    deserializeDocument,
-    getBlockTextLength,
-    getDocumentText,
-    normalizeDocument,
-    serializeDocument,
+  createEmptyDocument,
+  createParagraph,
+  deserializeDocument,
+  getBlockTextLength,
+  getDocumentText,
+  normalizeDocument,
+  serializeDocument,
 } from './index';
