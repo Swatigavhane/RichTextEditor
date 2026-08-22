@@ -49,12 +49,55 @@ export const replaceSelectionWithText = (
   const blockEnd = blockStart + getBlockTextLength(targetBlock);
   const localStart = Math.max(0, start - blockStart);
   const localEnd = Math.min(blockEnd - blockStart, end - blockStart);
+  const isCollapsedRange = localStart === localEnd;
   const nextChildren: TextSpan[] = [];
+  let replacementInserted = false;
   let spanOffset = 0;
 
   for (const span of targetBlock.children) {
     const spanStart = spanOffset;
     const spanEnd = spanOffset + span.text.length;
+
+    if (
+      isCollapsedRange &&
+      text.length > 0 &&
+      !replacementInserted &&
+      localStart >= spanStart &&
+      localStart <= spanEnd
+    ) {
+      const localCaretOffset = localStart - spanStart;
+
+      if (localCaretOffset === 0) {
+        nextChildren.push({
+          text,
+          marks: cloneMarks(marks),
+        });
+        nextChildren.push({ text: span.text, marks: cloneMarks(span.marks) });
+      } else if (localCaretOffset === span.text.length) {
+        nextChildren.push({ text: span.text, marks: cloneMarks(span.marks) });
+        nextChildren.push({
+          text,
+          marks: cloneMarks(marks),
+        });
+      } else {
+        nextChildren.push({
+          text: span.text.slice(0, localCaretOffset),
+          marks: cloneMarks(span.marks),
+        });
+        nextChildren.push({
+          text,
+          marks: cloneMarks(marks),
+        });
+        nextChildren.push({
+          text: span.text.slice(localCaretOffset),
+          marks: cloneMarks(span.marks),
+        });
+      }
+
+      replacementInserted = true;
+      spanOffset = spanEnd;
+      continue;
+    }
 
     if (spanEnd <= localStart || spanStart >= localEnd) {
       nextChildren.push({ text: span.text, marks: [...span.marks] });
@@ -69,11 +112,12 @@ export const replaceSelectionWithText = (
       });
     }
 
-    if (text.length > 0) {
+    if (text.length > 0 && !replacementInserted) {
       nextChildren.push({
         text,
         marks: cloneMarks(marks),
       });
+      replacementInserted = true;
     }
 
     if (spanEnd > localEnd) {
@@ -84,6 +128,13 @@ export const replaceSelectionWithText = (
     }
 
     spanOffset = spanEnd;
+  }
+
+  if (text.length > 0 && !replacementInserted) {
+    nextChildren.push({
+      text,
+      marks: cloneMarks(marks),
+    });
   }
 
   const updatedBlock: Block = {
