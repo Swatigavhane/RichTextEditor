@@ -1,27 +1,29 @@
-type ToolbarProps = {
-  activeMarks: string[];
-  onToggleBold: () => void;
-  onToggleItalic: () => void;
-  onInsertLink: () => void;
+import type { EditorCommandId } from '../../hooks/constants';
+
+type ToolbarCommand = {
+  id: EditorCommandId;
+  label: string;
+  isActive: boolean;
 };
 
-export default function Toolbar({
-  activeMarks,
-  onToggleBold,
-  onToggleItalic,
-  onInsertLink,
-}: ToolbarProps) {
+type ToolbarProps = {
+  commands: ToolbarCommand[];
+  onRunCommand: (command: EditorCommandId) => void;
+};
+
+export default function Toolbar({ commands, onRunCommand }: ToolbarProps) {
   return (
     <div className="editor-toolbar">
-      <button type="button" aria-pressed={activeMarks.includes('bold')} onClick={onToggleBold}>
-        Bold
-      </button>
-      <button type="button" aria-pressed={activeMarks.includes('italic')} onClick={onToggleItalic}>
-        Italic
-      </button>
-      <button type="button" onClick={onInsertLink}>
-        Link
-      </button>
+      {commands.map((command) => (
+        <button
+          key={command.id}
+          type="button"
+          aria-pressed={command.isActive}
+          onClick={() => onRunCommand(command.id)}
+        >
+          {command.label}
+        </button>
+      ))}
     </div>
   );
 }

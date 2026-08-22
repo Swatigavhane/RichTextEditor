@@ -12,12 +12,7 @@ export default function Editor() {
         <p className="eyebrow">React + TypeScript</p>
         <h1>Rich Text Editor</h1>
         <p className="lead">This layout now follows the requested folder structure.</p>
-        <Toolbar
-          activeMarks={editor.activeMarks}
-          onToggleBold={editor.toggleBold}
-          onToggleItalic={editor.toggleItalic}
-          onInsertLink={editor.insertLink}
-        />
+        <Toolbar commands={editor.toolbarCommands} onRunCommand={editor.runCommand} />
         {editor.documentModel.blocks.map((block: Document['blocks'][number]) => (
           <Block key={block.id} block={block} />
         ))}
