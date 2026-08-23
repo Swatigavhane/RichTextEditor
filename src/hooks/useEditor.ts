@@ -16,10 +16,7 @@ const useEditorState = () => {
 
   const activeMarks = useMemo(() => selectActiveMarks(editorState), [editorState]);
 
-  const serializedDocument = useMemo(
-    () => selectSerializedDocument(editorState),
-    [editorState],
-  );
+  const serializedDocument = useMemo(() => selectSerializedDocument(editorState), [editorState]);
 
   const setSelection = (nextSelection: EditorSelection) => {
     dispatch({ type: EDITOR_ACTIONS.SET_SELECTION, selection: nextSelection });

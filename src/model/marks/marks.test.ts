@@ -84,7 +84,9 @@ describe('mark helpers', () => {
 
   it('does not modify document for collapsed selections', () => {
     const documentModel = normalizeDocument({
-      blocks: [{ type: 'paragraph', id: 'block-1', children: [{ text: 'Hello world', marks: [] }] }],
+      blocks: [
+        { type: 'paragraph', id: 'block-1', children: [{ text: 'Hello world', marks: [] }] },
+      ],
     });
 
     const collapsed = buildSelection('block-1', 4, 'block-1', 4);

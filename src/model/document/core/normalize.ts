@@ -8,7 +8,8 @@ const marksKey = (marks: InlineMark[]): string => JSON.stringify(marks);
 const haveSameMarks = (left: InlineMark[], right: InlineMark[]): boolean =>
   marksKey(left) === marksKey(right);
 
-const toNonEmptySpans = (spans: TextSpan[]): TextSpan[] => spans.filter((span) => span.text.length > 0);
+const toNonEmptySpans = (spans: TextSpan[]): TextSpan[] =>
+  spans.filter((span) => span.text.length > 0);
 
 const mergeAdjacentSpansWithSameMarks = (spans: TextSpan[]): TextSpan[] => {
   const merged: TextSpan[] = [];

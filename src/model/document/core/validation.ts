@@ -4,12 +4,14 @@ import type { DocumentModel, InlineMark, ParagraphBlock, TextSpan } from '../../
 const isObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
 
-const isInlineMarkType = (value: unknown): value is InlineMark => value === 'bold' || value === 'italic';
+const isInlineMarkType = (value: unknown): value is InlineMark =>
+  value === 'bold' || value === 'italic';
 
 const isLinkMark = (value: unknown): value is InlineMark =>
   isObject(value) && value.type === 'link' && typeof value.href === 'string';
 
-const isInlineMark = (value: unknown): value is InlineMark => isInlineMarkType(value) || isLinkMark(value);
+const isInlineMark = (value: unknown): value is InlineMark =>
+  isInlineMarkType(value) || isLinkMark(value);
 
 const isTextSpan = (value: unknown): value is TextSpan =>
   isObject(value) &&

@@ -1,8 +1,17 @@
 // Text replacement helpers that update document content and resulting selection.
 import type { Block, Document, InlineMark, SelectionRange, TextSpan } from '../../types';
 import { DEFAULT_BLOCK_ID } from '../../constants';
-import { cloneDocument, createParagraph, getBlockTextLength, normalizeDocument } from '../../document';
-import { linearOffsetToSelectionPoint, normalizeSelectionRange, selectionRangeToLinearRange } from '../../../editor-core/selection/selection';
+import {
+  cloneDocument,
+  createParagraph,
+  getBlockTextLength,
+  normalizeDocument,
+} from '../../document';
+import {
+  linearOffsetToSelectionPoint,
+  normalizeSelectionRange,
+  selectionRangeToLinearRange,
+} from '../../../editor-core/selection/selection';
 import { cloneBlock, cloneMarks, findBlockIndexById, getBlockStartOffset } from '../utils/shared';
 
 const updateSelectionAfterRangeChange = (
@@ -36,7 +45,10 @@ export const replaceSelectionWithText = (
     };
   }
 
-  const firstBlockIndex = findBlockIndexById(normalizedDocument, normalizedSelection.anchor.blockId);
+  const firstBlockIndex = findBlockIndexById(
+    normalizedDocument,
+    normalizedSelection.anchor.blockId,
+  );
   const lastBlockIndex = Math.max(
     firstBlockIndex,
     findBlockIndexById(normalizedDocument, normalizedSelection.focus.blockId),
@@ -150,7 +162,11 @@ export const replaceSelectionWithText = (
 
   return {
     document: normalizeDocument(nextDocument),
-    selection: updateSelectionAfterRangeChange(normalizedDocument, normalizedSelection, text.length),
+    selection: updateSelectionAfterRangeChange(
+      normalizedDocument,
+      normalizedSelection,
+      text.length,
+    ),
   };
 };
 

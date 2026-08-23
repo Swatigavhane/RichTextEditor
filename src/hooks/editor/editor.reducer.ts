@@ -23,28 +23,23 @@ const withSelection = (
   selection,
 });
 
-const withToggledMark = (
+const commitDocumentChange = (
   state: EditorState,
-  mark: Parameters<typeof toggleInlineMark>[2],
-): EditorState => ({
-  ...withDocumentModel(
-    state,
-    toggleInlineMark(state.documentModel, state.selection, mark),
-  ),
-});
+  documentModel: EditorState['documentModel'],
+  selection = state.selection,
+): EditorState => {
+  const normalizedSelection = normalizeSelectionRange(documentModel, selection);
 
-const withDocumentModel = (state: EditorState, documentModel: EditorState['documentModel']): EditorState => ({
-  ...state,
-  documentModel,
-  selection: normalizeSelectionRange(documentModel, state.selection),
-  history: pushHistoryEntry(state.history, {
-    state: {
-      documentModel,
-      selection: normalizeSelectionRange(documentModel, state.selection),
-    },
-    timestamp: Date.now(),
-  }),
-});
+  return {
+    ...state,
+    documentModel,
+    selection: normalizedSelection,
+    history: pushHistoryEntry(state.history, {
+      state: { documentModel, selection: normalizedSelection },
+      timestamp: Date.now(),
+    }),
+  };
+};
 
 const restoreHistory = (
   history: EditorState['history'],
@@ -76,7 +71,10 @@ export const editorReducer = (state: EditorState, action: EditorAction): EditorS
         return state;
       }
 
-      return withToggledMark(state, commandMark);
+      return commitDocumentChange(
+        state,
+        toggleInlineMark(state.documentModel, state.selection, commandMark),
+      );
     }
     case EDITOR_ACTIONS.APPLY_INPUT: {
       const nextDocumentModel = applyInputEvent(state.documentModel, {
@@ -88,27 +86,21 @@ export const editorReducer = (state: EditorState, action: EditorAction): EditorS
       const caretOffset = textDiff.start + textDiff.insertedText.length;
       const blockId = action.selection.anchor.blockId;
 
-      return withDocumentModel(
-        {
-          ...state,
-          selection: buildSelection(blockId, caretOffset, blockId, caretOffset),
-        },
+      return commitDocumentChange(
+        state,
         nextDocumentModel,
+        buildSelection(blockId, caretOffset, blockId, caretOffset),
       );
     }
     case EDITOR_ACTIONS.UNDO: {
       const history = undoHistory(state.history);
 
-      return history === state.history
-        ? state
-        : restoreHistory(history, history.present.state);
+      return history === state.history ? state : restoreHistory(history, history.present.state);
     }
     case EDITOR_ACTIONS.REDO: {
       const history = redoHistory(state.history);
 
-      return history === state.history
-        ? state
-        : restoreHistory(history, history.present.state);
+      return history === state.history ? state : restoreHistory(history, history.present.state);
     }
     default:
       return state;

@@ -10,7 +10,9 @@ export type InputEventChange = {
 };
 
 const isEmptyBlock = (block: Document['blocks'][number] | undefined): boolean =>
-  Boolean(block && block.children.length > 0 && block.children.every((run) => run.text.length === 0));
+  Boolean(
+    block && block.children.length > 0 && block.children.every((run) => run.text.length === 0),
+  );
 
 const replaceFirstBlockText = (documentModel: Document, text: string): Document => {
   const firstBlock = documentModel.blocks[0];

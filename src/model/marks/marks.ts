@@ -1,10 +1,5 @@
 // Public marks API: coverage checks, mark toggles, and selection helpers.
-import type {
-  Document,
-  InlineMark,
-  MarkCoverage,
-  SelectionRange,
-} from '../types';
+import type { Document, InlineMark, MarkCoverage, SelectionRange } from '../types';
 import { normalizeDocument } from '../document';
 import {
   isSelectionCollapsed,

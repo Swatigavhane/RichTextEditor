@@ -1,27 +1,29 @@
 import Block from '../Block/Block';
 import Toolbar from '../Toolbar/Toolbar';
 import { useEditorContext } from '../../hooks';
+import { getDocumentText } from '../../model';
 import type { Document } from '../../model';
 
 export default function Editor() {
   const editorViewModel = useEditorContext();
-  const formattedDocument = JSON.stringify(
-    JSON.parse(editorViewModel.serializedDocument),
-    null,
-    2,
-  );
+  const wordCount = getDocumentText(editorViewModel.documentModel)
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
 
   return (
     <main className="app-shell">
-      <section className="hero-card">
-        <p className="eyebrow">React + TypeScript</p>
-        <h1>Rich Text Editor</h1>
-        <p className="lead">This layout now follows the requested folder structure.</p>
+      <section className="editor-shell">
         <Toolbar />
-        {editorViewModel.documentModel.blocks.map((block: Document['blocks'][number]) => (
-          <Block key={block.id} block={block} />
-        ))}
-        <pre className="document-preview">{formattedDocument}</pre>
+        <div className="editor-canvas">
+          {editorViewModel.documentModel.blocks.map((block: Document['blocks'][number]) => (
+            <Block key={block.id} block={block} />
+          ))}
+        </div>
+        <footer className="editor-footer">
+          <span>{wordCount === 1 ? '1 word' : `${wordCount} words`}</span>
+        </footer>
+        {/* <pre className="document-preview">{formattedDocument}</pre> */}
       </section>
     </main>
   );

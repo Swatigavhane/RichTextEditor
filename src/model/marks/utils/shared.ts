@@ -2,7 +2,10 @@
 import type { Block, Document, InlineMark, SelectionRange, TextSpan } from '../../types';
 import { BLOCK_SEPARATOR_LENGTH } from '../../constants';
 import { getBlockTextLength } from '../../document';
-import { normalizeSelectionRange, selectionRangeToLinearRange } from '../../../editor-core/selection/selection';
+import {
+  normalizeSelectionRange,
+  selectionRangeToLinearRange,
+} from '../../../editor-core/selection/selection';
 
 export type MarkMutationMode = 'add' | 'remove';
 export type SpanVisitor = (span: TextSpan, overlapLength: number) => void;
@@ -44,7 +47,10 @@ export const cloneBlock = (block: Block): Block => ({
   children: block.children.map(cloneSpan),
 });
 
-export const getLinearSelectionBounds = (documentModel: Document, selectionRange: SelectionRange) => {
+export const getLinearSelectionBounds = (
+  documentModel: Document,
+  selectionRange: SelectionRange,
+) => {
   const normalizedSelection = normalizeSelectionRange(documentModel, selectionRange);
   const linearRange = selectionRangeToLinearRange(documentModel, normalizedSelection);
 

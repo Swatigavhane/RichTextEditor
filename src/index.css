@@ -1,6 +1,6 @@
 :root {
   font-family:
-    Inter,
+    'Trebuchet MS',
     system-ui,
     -apple-system,
     BlinkMacSystemFont,
@@ -37,59 +37,136 @@ button {
   font: inherit;
 }
 
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 56px;
+  padding: 10px 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(8, 8, 8, 0.28);
+}
+
+.toolbar-group {
+  display: flex;
+  gap: 4px;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  margin: 0 4px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
 .app-shell {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: 48px 24px;
 }
 
-.hero-card {
-  width: min(720px, 100%);
-  padding: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 28px;
-  background: rgba(17, 17, 17, 0.72);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+.editor-shell {
+  width: min(860px, 100%);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  background: rgba(25, 24, 23, 0.88);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
   backdrop-filter: blur(18px);
 }
 
-.eyebrow {
-  margin: 0 0 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.document-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.document-mark {
+  display: grid;
+  width: 32px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid rgba(255, 159, 90, 0.7);
+  border-radius: 6px 6px 10px 10px;
+  color: #ff9f5a;
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.document-kicker {
+  margin: 0 0 3px;
   color: #ffbb8a;
-  font-size: 0.78rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 h1 {
   margin: 0;
-  font-size: clamp(2.5rem, 7vw, 5rem);
-  line-height: 0.95;
+  color: #fff8ef;
+  font-family: Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 500;
 }
 
-.lead {
-  max-width: 38rem;
-  margin: 18px 0 0;
-  color: rgba(243, 239, 232, 0.82);
-  font-size: 1.05rem;
+.save-status {
+  color: rgba(243, 239, 232, 0.5);
+  font-size: 0.78rem;
 }
 
 .editor-block {
-  min-height: 96px;
-  margin-top: 28px;
-  padding: 18px 20px;
-  border: 1px solid rgba(255, 187, 138, 0.45);
-  border-radius: 12px;
+  min-height: 260px;
+  padding: 34px 42px;
+  border: 0;
+  border-radius: 0;
   outline: none;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 248, 239, 0.025);
   color: #fff8ef;
+  font-family: Georgia, serif;
+  font-size: 1.18rem;
+  line-height: 1.8;
   white-space: pre-wrap;
 }
 
 .editor-block:focus {
-  border-color: #ff9f5a;
-  box-shadow: 0 0 0 3px rgba(255, 159, 90, 0.16);
+  box-shadow: inset 3px 0 0 #ff9f5a;
+}
+
+.editor-canvas {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.editor-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 28px;
+  color: rgba(243, 239, 232, 0.5);
+  font-size: 0.75rem;
+}
+
+.document-preview {
+  width: 100%;
+  height: 240px;
+  margin: 28px 0 0;
+  padding: 18px 20px;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.24);
+  color: rgba(243, 239, 232, 0.78);
+  white-space: pre;
 }
 
 .action-row {
@@ -102,8 +179,10 @@ h1 {
 
 button {
   border: 0;
-  border-radius: 999px;
-  padding: 14px 22px;
+  border-radius: 7px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
   background: linear-gradient(135deg, #ff9f5a, #ff7143);
   color: #1b0f08;
   font-weight: 700;
@@ -113,9 +192,57 @@ button {
     filter 160ms ease;
 }
 
+.editor-toolbar button {
+  background: transparent;
+  color: rgba(243, 239, 232, 0.76);
+  font-size: 0.86rem;
+}
+
+.editor-toolbar button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff8ef;
+  transform: none;
+  filter: none;
+}
+
+.editor-toolbar button:disabled {
+  cursor: not-allowed;
+  opacity: 0.32;
+}
+
+.editor-toolbar button.is-active {
+  background: #ff9f5a;
+  color: #1b0f08;
+  box-shadow: none;
+}
+
+.toolbar-icon {
+  display: inline-grid;
+  min-width: 16px;
+  place-items: center;
+  font-weight: 700;
+}
+
+.toolbar-icon-toggle_italic {
+  font-style: italic;
+}
+
+.toolbar-icon-set_link,
+.toolbar-icon-undo,
+.toolbar-icon-redo {
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
 button:hover {
   transform: translateY(-1px);
   filter: brightness(1.04);
+}
+
+button.is-active {
+  background: #fff8ef;
+  color: #1b0f08;
+  box-shadow: inset 0 0 0 2px #ff7143;
 }
 
 .action-row span {
@@ -123,9 +250,29 @@ button:hover {
 }
 
 @media (max-width: 640px) {
-  .hero-card {
-    padding: 28px;
-    border-radius: 22px;
+  .app-shell {
+    padding: 20px 12px;
+  }
+
+  .editor-shell {
+    border-radius: 14px;
+  }
+
+  .editor-header {
+    padding: 20px;
+  }
+
+  .editor-toolbar {
+    padding: 10px 16px;
+  }
+
+  .editor-footer {
+    padding: 12px 20px;
+  }
+
+  .editor-block {
+    min-height: 320px;
+    padding: 28px 24px;
   }
 
   .action-row {

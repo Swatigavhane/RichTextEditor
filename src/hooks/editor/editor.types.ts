@@ -24,22 +24,22 @@ export const EDITOR_ACTIONS = {
 
 export type EditorAction =
   | {
-    type: typeof EDITOR_ACTIONS.SET_SELECTION;
-    selection: EditorSelection;
-  }
+      type: typeof EDITOR_ACTIONS.SET_SELECTION;
+      selection: EditorSelection;
+    }
   | {
-    type: typeof EDITOR_ACTIONS.RUN_COMMAND;
-    command: EditorCommandId;
-  }
+      type: typeof EDITOR_ACTIONS.RUN_COMMAND;
+      command: EditorCommandId;
+    }
   | {
-    type: typeof EDITOR_ACTIONS.APPLY_INPUT;
-    beforeText: string;
-    afterText: string;
-    selection: EditorSelection;
-  }
+      type: typeof EDITOR_ACTIONS.APPLY_INPUT;
+      beforeText: string;
+      afterText: string;
+      selection: EditorSelection;
+    }
   | {
-    type: typeof EDITOR_ACTIONS.UNDO;
-  }
+      type: typeof EDITOR_ACTIONS.UNDO;
+    }
   | {
-    type: typeof EDITOR_ACTIONS.REDO;
-  };
+      type: typeof EDITOR_ACTIONS.REDO;
+    };

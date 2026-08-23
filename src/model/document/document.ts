@@ -36,8 +36,6 @@ export const getBlockTextLength = (block: ParagraphBlock): number =>
   block.children.reduce((length, span) => length + span.text.length, 0);
 
 export const getDocumentText = (documentModel: DocumentModel): string =>
-  documentModel.blocks
-    .map((block) => block.children.map((span) => span.text).join(''))
-    .join('\n');
+  documentModel.blocks.map((block) => block.children.map((span) => span.text).join('')).join('\n');
 
 export { cloneDocument };

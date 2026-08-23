@@ -2,8 +2,19 @@
 import type { Block, Document, InlineMark, SelectionRange, TextSpan } from '../../types';
 import { EMPTY_TEXT_SPAN } from '../../constants';
 import { getBlockTextLength, normalizeDocument } from '../../document';
-import { isSelectionCollapsed, normalizeSelectionRange, selectionRangeToLinearRange } from '../../../editor-core/selection/selection';
-import { MarkMutationMode, cloneBlock, cloneMarks, cloneSpan, getBlockStartOffset, markKey } from '../utils/shared';
+import {
+  isSelectionCollapsed,
+  normalizeSelectionRange,
+  selectionRangeToLinearRange,
+} from '../../../editor-core/selection/selection';
+import {
+  MarkMutationMode,
+  cloneBlock,
+  cloneMarks,
+  cloneSpan,
+  getBlockStartOffset,
+  markKey,
+} from '../utils/shared';
 
 const markExists = (marks: InlineMark[], mark: InlineMark): boolean =>
   marks.some((currentMark) => markKey(currentMark) === markKey(mark));
@@ -125,7 +136,13 @@ export const applyMarkMutation = (
         return cloneBlock(block);
       }
 
-      return transformBlockRange(block, overlapStart - blockStart, overlapEnd - blockStart, mark, mode);
+      return transformBlockRange(
+        block,
+        overlapStart - blockStart,
+        overlapEnd - blockStart,
+        mark,
+        mode,
+      );
     }),
   });
 };
