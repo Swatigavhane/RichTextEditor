@@ -1,8 +1,8 @@
 // Shared low-level helpers used by block split and merge operations.
-import type { Block, TextSpan } from '../types';
+import type { Block, TextSpan } from '../../types';
+import { LEFT_BLOCK_SUFFIX, RIGHT_BLOCK_SUFFIX } from '../../constants';
 
-export const LEFT_BLOCK_SUFFIX = 'left';
-export const RIGHT_BLOCK_SUFFIX = 'right';
+export { LEFT_BLOCK_SUFFIX, RIGHT_BLOCK_SUFFIX };
 
 export const cloneSpan = (span: TextSpan): TextSpan => ({
   text: span.text,

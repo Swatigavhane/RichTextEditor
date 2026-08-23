@@ -1,3 +1,3 @@
 // Public block API: split and merge operations.
-export { splitBlock } from './blocks.split';
-export { mergeBlocks } from './blocks.merge';
+export { splitBlock } from './operations/split';
+export { mergeBlocks } from './operations/merge';

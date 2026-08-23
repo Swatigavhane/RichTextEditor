@@ -1,6 +1,6 @@
 // Split logic for converting one block into left and right fragments.
-import type { Block, TextSpan } from '../types';
-import { mergeAdjacentRuns, splitRunAt } from '../runs';
+import type { Block, TextSpan } from '../../types';
+import { mergeAdjacentRuns, splitRunAt } from '../../runs';
 import {
   LEFT_BLOCK_SUFFIX,
   RIGHT_BLOCK_SUFFIX,
@@ -8,7 +8,7 @@ import {
   clampOffset,
   cloneSpan,
   getBlockTextLength,
-} from './blocks.shared';
+} from '../utils/shared';
 
 const createSplitBlock = (sourceBlock: Block, suffix: string, spans: TextSpan[]): Block => ({
   type: sourceBlock.type,

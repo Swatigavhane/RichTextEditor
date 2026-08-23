@@ -1,8 +1,9 @@
 // Internal mark mutation pipeline used by toggle/apply/clear actions.
-import type { Block, Document, InlineMark, SelectionRange, TextSpan } from '../types';
-import { getBlockTextLength, normalizeDocument } from '../document';
-import { isSelectionCollapsed, normalizeSelectionRange, selectionRangeToLinearRange } from '../../editor-core/selection/selection';
-import { MarkMutationMode, cloneBlock, cloneMarks, cloneSpan, getBlockStartOffset, markKey } from './marks.shared';
+import type { Block, Document, InlineMark, SelectionRange, TextSpan } from '../../types';
+import { EMPTY_TEXT_SPAN } from '../../constants';
+import { getBlockTextLength, normalizeDocument } from '../../document';
+import { isSelectionCollapsed, normalizeSelectionRange, selectionRangeToLinearRange } from '../../../editor-core/selection/selection';
+import { MarkMutationMode, cloneBlock, cloneMarks, cloneSpan, getBlockStartOffset, markKey } from '../utils/shared';
 
 const markExists = (marks: InlineMark[], mark: InlineMark): boolean =>
   marks.some((currentMark) => markKey(currentMark) === markKey(mark));
@@ -94,7 +95,7 @@ const transformBlockRange = (
   return {
     type: 'paragraph',
     id: block.id,
-    children: nextChildren.length > 0 ? nextChildren : [{ text: '', marks: [] }],
+    children: nextChildren.length > 0 ? nextChildren : [EMPTY_TEXT_SPAN],
   };
 };
 

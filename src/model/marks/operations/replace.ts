@@ -1,10 +1,9 @@
 // Text replacement helpers that update document content and resulting selection.
-import type { Block, Document, InlineMark, SelectionRange, TextSpan } from '../types';
-import { cloneDocument, createParagraph, getBlockTextLength, normalizeDocument } from '../document';
-import { linearOffsetToSelectionPoint, normalizeSelectionRange, selectionRangeToLinearRange } from '../../editor-core/selection/selection';
-import { cloneBlock, cloneMarks, findBlockIndexById, getBlockStartOffset } from './marks.shared';
-
-const DEFAULT_BLOCK_ID = 'block-1';
+import type { Block, Document, InlineMark, SelectionRange, TextSpan } from '../../types';
+import { DEFAULT_BLOCK_ID } from '../../constants';
+import { cloneDocument, createParagraph, getBlockTextLength, normalizeDocument } from '../../document';
+import { linearOffsetToSelectionPoint, normalizeSelectionRange, selectionRangeToLinearRange } from '../../../editor-core/selection/selection';
+import { cloneBlock, cloneMarks, findBlockIndexById, getBlockStartOffset } from '../utils/shared';
 
 const updateSelectionAfterRangeChange = (
   documentModel: Document,

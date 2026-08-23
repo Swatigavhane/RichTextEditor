@@ -1,16 +1,14 @@
 // Public document API: create, normalize, serialize, and deserialize documents.
 import type { DocumentModel, ParagraphBlock } from '../types';
-import { cloneDocument } from './document.clone';
-import { normalizeDocumentModel } from './document.normalize';
-import { isDocumentModel } from './document.validation';
-
-const DEFAULT_BLOCK_ID = 'block-1';
-const EMPTY_SPAN = { text: '', marks: [] };
+import { DEFAULT_BLOCK_ID, EMPTY_TEXT_SPAN } from '../constants';
+import { cloneDocument } from './core/clone';
+import { normalizeDocumentModel } from './core/normalize';
+import { isDocumentModel } from './core/validation';
 
 export const createParagraph = (id: string, text = ''): ParagraphBlock => ({
   type: 'paragraph',
   id,
-  children: text.length > 0 ? [{ text, marks: [] }] : [EMPTY_SPAN],
+  children: text.length > 0 ? [{ text, marks: [] }] : [EMPTY_TEXT_SPAN],
 });
 
 export const createEmptyDocument = (): DocumentModel => ({

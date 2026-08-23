@@ -1,5 +1,5 @@
 // Immutable clone helpers for marks, spans, blocks, and full documents.
-import type { DocumentModel, InlineMark, ParagraphBlock, TextSpan } from '../types';
+import type { DocumentModel, InlineMark, ParagraphBlock, TextSpan } from '../../types';
 
 export const cloneMarks = (marks: InlineMark[]): InlineMark[] =>
   marks.map((mark) => (typeof mark === 'string' ? mark : { ...mark }));

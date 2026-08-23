@@ -1,9 +1,7 @@
 import type { Document } from '../../model/types';
 import { getBlockTextLength, getDocumentText, createParagraph } from '../../model/document';
+import { BLOCK_SEPARATOR_LENGTH, DEFAULT_BLOCK_ID } from '../../model/constants';
 import type { EditorSelection, LinearSelection, SelectionPoint } from './types';
-
-const DEFAULT_BLOCK_ID = 'block-1';
-const BLOCK_SEPARATOR_LENGTH = 1;
 
 const clampOffset = (offset: number, minimum: number, maximum: number): number =>
   Math.min(Math.max(offset, minimum), maximum);

@@ -1,7 +1,8 @@
 // Shared traversal and cloning helpers for mark-related operations.
-import type { Block, Document, InlineMark, SelectionRange, TextSpan } from '../types';
-import { getBlockTextLength } from '../document';
-import { normalizeSelectionRange, selectionRangeToLinearRange } from '../../editor-core/selection/selection';
+import type { Block, Document, InlineMark, SelectionRange, TextSpan } from '../../types';
+import { BLOCK_SEPARATOR_LENGTH } from '../../constants';
+import { getBlockTextLength } from '../../document';
+import { normalizeSelectionRange, selectionRangeToLinearRange } from '../../../editor-core/selection/selection';
 
 export type MarkMutationMode = 'add' | 'remove';
 export type SpanVisitor = (span: TextSpan, overlapLength: number) => void;
@@ -16,7 +17,7 @@ export const getBlockStartOffset = (documentModel: Document, blockIndex: number)
     offset += getBlockTextLength(documentModel.blocks[index]);
 
     if (index < documentModel.blocks.length - 1) {
-      offset += 1;
+      offset += BLOCK_SEPARATOR_LENGTH;
     }
   }
 

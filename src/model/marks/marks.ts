@@ -10,9 +10,9 @@ import {
   isSelectionCollapsed,
   normalizeSelectionRange,
 } from '../../editor-core/selection/selection';
-import { applyMarkMutation } from './marks.mutation';
-import { forEachSelectedSpan, getLinearSelectionBounds, markKey } from './marks.shared';
-export { deleteSelectionRange, replaceSelectionWithText } from './marks.replace';
+import { applyMarkMutation } from './operations/mutation';
+import { forEachSelectedSpan, getLinearSelectionBounds, markKey } from './utils/shared';
+export { deleteSelectionRange, replaceSelectionWithText } from './operations/replace';
 
 export const getMarkCoverage = (
   documentModel: Document,
