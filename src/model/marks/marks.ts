@@ -7,7 +7,7 @@ import {
 } from '../../editor-core/selection/selection';
 import { applyMarkMutation } from './operations/mutation';
 import { forEachSelectedSpan, getLinearSelectionBounds, markKey } from './utils/shared';
-export { deleteSelectionRange, replaceSelectionWithText } from './operations/replace';
+export { replaceSelectionWithText } from './operations/replace';
 
 // Reports whether the selected text contains none, some, or all of a mark.
 export const getMarkCoverage = (
@@ -61,20 +61,6 @@ export const toggleInlineMark = (
 
   return applyMarkMutation(normalizedDocument, normalizedSelection, mark, mode);
 };
-
-/** Applies a mark to every text range covered by the selection. */
-export const applyInlineMark = (
-  documentModel: Document,
-  selectionRange: SelectionRange,
-  mark: InlineMark,
-): Document => applyMarkMutation(documentModel, selectionRange, mark, 'add');
-
-// Removes a mark from the selected text.
-export const clearInlineMark = (
-  documentModel: Document,
-  selectionRange: SelectionRange,
-  mark: InlineMark,
-): Document => applyMarkMutation(documentModel, selectionRange, mark, 'remove');
 
 /** Returns the distinct marks present in the selected text. */
 export const getSelectionMarks = (

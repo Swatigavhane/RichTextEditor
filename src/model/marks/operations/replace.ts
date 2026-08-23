@@ -171,9 +171,3 @@ export const replaceSelectionWithText = (
     ),
   };
 };
-
-export const deleteSelectionRange = (
-  documentModel: Document,
-  selectionRange: SelectionRange,
-): { document: Document; selection: SelectionRange } =>
-  replaceSelectionWithText(documentModel, selectionRange, '', []);

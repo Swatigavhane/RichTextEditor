@@ -31,11 +31,6 @@ export { splitRunAt, mergeAdjacentRuns, normalizeRuns } from './runs';
 export {
   getMarkCoverage,
   toggleInlineMark,
-  applyInlineMark,
-  clearInlineMark,
   getSelectionMarks,
-  deleteSelectionRange,
   replaceSelectionWithText,
 } from './marks';
-
-export { splitBlock, mergeBlocks } from './blocks';

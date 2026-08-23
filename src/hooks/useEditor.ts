@@ -74,8 +74,6 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
 };
 
 /** Provides the editor context through the public hook API. */
-export const useEditor = () => useEditorContext();
-
 /** Reads editor context and fails when used outside its provider. */
 export const useEditorContext = (): EditorViewModel => {
   const editorContext = useContext(EditorContext);
