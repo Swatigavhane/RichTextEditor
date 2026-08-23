@@ -45,7 +45,7 @@ const getValidDomSelection = (
 };
 
 export default function Block({ block }: BlockProps) {
-  const { selection, applyInput, setSelection, splitBlockAt } = useEditorContext();
+  const { selection, applyInput, setSelection } = useEditorContext();
   const blockRef = useRef<HTMLDivElement>(null);
   const text = block.children.map((run) => run.text).join('');
 
@@ -115,7 +115,11 @@ export default function Block({ block }: BlockProps) {
     }
 
     event.preventDefault();
-    splitBlockAt(block.id, selection.anchor.offset);
+    const start = Math.min(selection.anchor.offset, selection.focus.offset);
+    const end = Math.max(selection.anchor.offset, selection.focus.offset);
+    const nextText = `${text.slice(0, start)}\n${text.slice(end)}`;
+
+    applyInput(text, nextText, selection);
   };
 
   return (

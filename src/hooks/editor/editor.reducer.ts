@@ -1,5 +1,5 @@
 import { buildSelection } from '../../utils/buildSelection';
-import { createEmptyDocument, splitBlock, toggleInlineMark } from '../../model';
+import { createEmptyDocument, toggleInlineMark } from '../../model';
 import { normalizeSelectionRange } from '../../editor-core/selection';
 import { resolveEditorCommandMark } from '../../editor-core/commands';
 import { applyInputEvent } from '../../editor-core/reconciler';
@@ -53,31 +53,6 @@ const restoreHistory = (
   ...snapshot,
   history,
 });
-
-const splitDocumentBlock = (
-  state: EditorState,
-  blockId: string,
-  offset: number,
-): EditorState => {
-  const blockIndex = state.documentModel.blocks.findIndex((block) => block.id === blockId);
-  const block = state.documentModel.blocks[blockIndex];
-
-  if (!block) {
-    return state;
-  }
-
-  const [leftBlock, rightBlock] = splitBlock(block, offset);
-  const blocks = [...state.documentModel.blocks];
-  blocks.splice(blockIndex, 1, leftBlock, rightBlock);
-
-  return withDocumentModel(
-    {
-      ...state,
-      selection: buildSelection(rightBlock.id, 0, rightBlock.id, 0),
-    },
-    { blocks },
-  );
-};
 
 export const createInitialState = (): EditorState => {
   const documentModel = createEmptyDocument();
@@ -135,8 +110,6 @@ export const editorReducer = (state: EditorState, action: EditorAction): EditorS
         ? state
         : restoreHistory(history, history.present.state);
     }
-    case EDITOR_ACTIONS.SPLIT_BLOCK:
-      return splitDocumentBlock(state, action.blockId, action.offset);
     default:
       return state;
   }

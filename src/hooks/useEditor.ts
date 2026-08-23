@@ -48,10 +48,6 @@ const useEditorState = () => {
     });
   };
 
-  const splitBlockAt = (blockId: string, offset: number) => {
-    dispatch({ type: EDITOR_ACTIONS.SPLIT_BLOCK, blockId, offset });
-  };
-
   return {
     documentModel: editorState.documentModel,
     selection: editorState.selection,
@@ -60,7 +56,6 @@ const useEditorState = () => {
     setSelection,
     runCommand,
     applyInput,
-    splitBlockAt,
     canUndo: editorState.history.past.length > 0,
     canRedo: editorState.history.future.length > 0,
   };

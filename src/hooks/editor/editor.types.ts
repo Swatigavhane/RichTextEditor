@@ -20,7 +20,6 @@ export const EDITOR_ACTIONS = {
   APPLY_INPUT: 'APPLY_INPUT',
   UNDO: 'UNDO',
   REDO: 'REDO',
-  SPLIT_BLOCK: 'SPLIT_BLOCK',
 } as const;
 
 export type EditorAction =
@@ -43,9 +42,4 @@ export type EditorAction =
   }
   | {
     type: typeof EDITOR_ACTIONS.REDO;
-  }
-  | {
-    type: typeof EDITOR_ACTIONS.SPLIT_BLOCK;
-    blockId: string;
-    offset: number;
   };
