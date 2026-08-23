@@ -11,6 +11,7 @@ export default function Editor() {
     .split(/\s+/)
     .filter(Boolean).length;
 
+  console.log('documentModel =', editorViewModel.documentModel);
   return (
     <main className="app-shell">
       <section className="editor-shell">

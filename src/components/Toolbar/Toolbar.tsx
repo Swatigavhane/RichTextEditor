@@ -64,6 +64,7 @@ export default function Toolbar() {
         {formattingButtons.map(({ command, label, icon, mark }) => (
           <EditorButton
             key={command}
+            buttonId={command === EditorCommand.TOGGLE_BOLD ? 'editor-bold-button' : undefined}
             disabled={isCommandDisabled(command, canUndo, canRedo)}
             icon={icon}
             iconClassName={`toolbar-icon-${command.toLowerCase()}`}

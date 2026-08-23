@@ -1,7 +1,7 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useRef } from 'react';
 import type { Block as BlockModel } from '../../model';
 import type { EditorSelection } from '../../editor-core/selection';
-import { useEditorContext } from '../../hooks';
+import { useEditorContext, useRestoreEditorSelection } from '../../hooks';
 
 type BlockProps = {
   block: BlockModel;
@@ -45,27 +45,6 @@ const getValidDomSelection = (
   }
 
   return domSelection as Selection & { anchorNode: Node; focusNode: Node };
-};
-
-/** Finds the DOM node and local offset matching a model text offset. */
-const getDomPoint = (root: Node, offset: number): { node: Node; offset: number } => {
-  let remainingOffset = offset;
-
-  for (const child of root.childNodes) {
-    const childLength = child.textContent?.length ?? 0;
-
-    if (child.nodeType === Node.TEXT_NODE) {
-      if (remainingOffset <= childLength) {
-        return { node: child, offset: remainingOffset };
-      }
-    } else if (remainingOffset <= childLength) {
-      return getDomPoint(child, remainingOffset);
-    }
-
-    remainingOffset -= childLength;
-  }
-
-  return { node: root, offset: root.childNodes.length };
 };
 
 /** Converts a DOM selection inside a block into model selection offsets. */
@@ -135,32 +114,7 @@ export default function Block({ block }: BlockProps) {
 
   const renderedHtml = renderBlockHtml(block);
 
-  /** Restores the model selection after React updates the editable DOM. */
-  useLayoutEffect(() => {
-    const element = blockRef.current;
-
-    if (
-      !element ||
-      document.activeElement !== element ||
-      selection.anchor.blockId !== block.id ||
-      selection.focus.blockId !== block.id
-    ) {
-      return;
-    }
-
-    const domSelection = window.getSelection();
-    const range = document.createRange();
-    const anchorOffset = Math.min(selection.anchor.offset, text.length);
-    const focusOffset = Math.min(selection.focus.offset, text.length);
-    const anchorPoint = getDomPoint(element, anchorOffset);
-    const focusPoint = getDomPoint(element, focusOffset);
-
-    range.setStart(anchorPoint.node, anchorPoint.offset);
-    range.setEnd(focusPoint.node, focusPoint.offset);
-
-    domSelection?.removeAllRanges();
-    domSelection?.addRange(range);
-  }, [block.id, selection, text]);
+  useRestoreEditorSelection(blockRef, block.id, selection, text.length);
 
   /** Stores the browser selection in model coordinates. */
   const handleSelect = (event: React.SyntheticEvent<HTMLDivElement>) => {
@@ -173,6 +127,12 @@ export default function Block({ block }: BlockProps) {
 
   /** Inserts a newline or space when the corresponding key is pressed. */
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Tab' && !event.shiftKey) {
+      event.preventDefault();
+      document.getElementById('editor-bold-button')?.focus();
+      return;
+    }
+
     const isSpaceKey = event.key === ' ' || event.key === 'Spacebar' || event.code === 'Space';
 
     if (event.key !== 'Enter' && !isSpaceKey) {

@@ -2,6 +2,7 @@ type EditorButtonProps = {
   label: string;
   icon: string;
   iconClassName?: string;
+  buttonId?: string;
   disabled?: boolean;
   isActive?: boolean;
   onClick: () => void;
@@ -12,6 +13,7 @@ export default function EditorButton({
   label,
   icon,
   iconClassName,
+  buttonId,
   disabled = false,
   isActive = false,
   onClick,
@@ -19,6 +21,7 @@ export default function EditorButton({
   return (
     <button
       type="button"
+      id={buttonId}
       aria-label={label}
       aria-pressed={isActive}
       className={isActive ? 'is-active' : undefined}
