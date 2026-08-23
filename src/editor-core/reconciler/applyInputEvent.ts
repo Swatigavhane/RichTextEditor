@@ -11,11 +11,13 @@ export type InputEventChange = {
   selection: EditorSelection;
 };
 
+/** Checks whether a block contains no text. */
 const isEmptyBlock = (block: Document['blocks'][number] | undefined): boolean =>
   Boolean(
     block && block.children.length > 0 && block.children.every((run) => run.text.length === 0),
   );
 
+/** Replaces the first block's content while preserving the rest of the document. */
 const replaceFirstBlockText = (documentModel: Document, text: string): Document => {
   const firstBlock = documentModel.blocks[0];
 
@@ -40,11 +42,11 @@ export const applyInputEvent = (documentModel: Document, change: InputEventChang
   const selection =
     textDiff.deletedText.length > 0 && isSelectionCollapsed(change.selection)
       ? buildSelection(
-        change.selection.anchor.blockId,
-        textDiff.start,
-        change.selection.anchor.blockId,
-        textDiff.start + textDiff.deletedText.length,
-      )
+          change.selection.anchor.blockId,
+          textDiff.start,
+          change.selection.anchor.blockId,
+          textDiff.start + textDiff.deletedText.length,
+        )
       : change.selection;
   const nextDocument = replaceSelectionWithText(
     documentModel,

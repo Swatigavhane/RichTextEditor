@@ -17,6 +17,7 @@ const toolbarButtons: ToolbarButton[] = [
   { command: EditorCommand.REDO, label: 'Redo', icon: 'Redo', mark: null },
 ];
 
+/** Returns whether a toolbar command is unavailable in the current history state. */
 const isCommandDisabled = (
   command: EditorCommandId,
   canUndo: boolean,
@@ -33,7 +34,7 @@ const isCommandDisabled = (
   return false;
 };
 
-// Renders formatting and history commands connected to the editor context.
+/** Renders formatting and history commands connected to the editor context. */
 export default function Toolbar() {
   const { activeMarks, runCommand, canUndo, canRedo } = useEditorContext();
 
@@ -52,7 +53,10 @@ export default function Toolbar() {
             onMouseDown={(event) => event.preventDefault()}
             onClick={() => runCommand(command)}
           >
-            <span aria-hidden="true" className={`toolbar-icon toolbar-icon-${command.toLowerCase()}`}>
+            <span
+              aria-hidden="true"
+              className={`toolbar-icon toolbar-icon-${command.toLowerCase()}`}
+            >
               {icon}
             </span>
           </button>
@@ -70,7 +74,10 @@ export default function Toolbar() {
             onMouseDown={(event) => event.preventDefault()}
             onClick={() => runCommand(command)}
           >
-            <span aria-hidden="true" className={`toolbar-icon toolbar-icon-${command.toLowerCase()}`}>
+            <span
+              aria-hidden="true"
+              className={`toolbar-icon toolbar-icon-${command.toLowerCase()}`}
+            >
               {icon}
             </span>
           </button>

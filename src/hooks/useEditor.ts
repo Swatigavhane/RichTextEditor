@@ -11,18 +11,20 @@ import {
   selectSerializedDocument,
 } from './editor';
 
+/** Builds the context view model around the editor reducer. */
 const useEditorState = () => {
-  // Builds the context view model around the editor reducer.
   const [editorState, dispatch] = useReducer(editorReducer, undefined, createInitialState);
 
   const activeMarks = useMemo(() => selectActiveMarks(editorState), [editorState]);
 
   const serializedDocument = useMemo(() => selectSerializedDocument(editorState), [editorState]);
 
+  /** Dispatches a selection update to the editor reducer. */
   const setSelection = (nextSelection: EditorSelection) => {
     dispatch({ type: EDITOR_ACTIONS.SET_SELECTION, selection: nextSelection });
   };
 
+  /** Dispatches a formatting, undo, or redo command. */
   const runCommand = (command: EditorCommandId) => {
     if (command === EditorCommand.UNDO) {
       dispatch({ type: EDITOR_ACTIONS.UNDO });
@@ -37,6 +39,7 @@ const useEditorState = () => {
     dispatch({ type: EDITOR_ACTIONS.RUN_COMMAND, command });
   };
 
+  /** Dispatches a browser text change for reconciliation and history tracking. */
   const applyInput = (beforeText: string, afterText: string, selection: EditorSelection) => {
     dispatch({
       type: EDITOR_ACTIONS.APPLY_INPUT,
@@ -64,15 +67,16 @@ type EditorViewModel = ReturnType<typeof useEditorState>;
 const EditorContext = createContext<EditorViewModel | null>(null);
 
 export const EditorProvider = ({ children }: { children: ReactNode }) => {
-  // Makes editor state and commands available to all editor descendants.
+  /** Makes editor state and commands available to all editor descendants. */
   const editorViewModel = useEditorState();
 
   return createElement(EditorContext.Provider, { value: editorViewModel }, children);
 };
 
+/** Provides the editor context through the public hook API. */
 export const useEditor = () => useEditorContext();
 
-// Reads editor context and fails early when used outside its provider.
+/** Reads editor context and fails when used outside its provider. */
 export const useEditorContext = (): EditorViewModel => {
   const editorContext = useContext(EditorContext);
 

@@ -7,6 +7,7 @@ type BlockProps = {
   block: BlockModel;
 };
 
+/** Converts a DOM boundary position into a text offset relative to the block. */
 const getTextOffset = (root: Node, target: Node, targetOffset: number): number => {
   if (root === target) {
     if (target.nodeType === Node.TEXT_NODE) {
@@ -31,7 +32,7 @@ const getTextOffset = (root: Node, target: Node, targetOffset: number): number =
   return offset;
 };
 
-// Returns the DOM selection only when both endpoints are available.
+/** Returns the DOM selection only when both endpoints are available. */
 const getValidDomSelection = (
   domSelection: Selection | null,
 ): (Selection & { anchorNode: Node; focusNode: Node }) | null => {
@@ -46,7 +47,7 @@ const getValidDomSelection = (
   return domSelection as Selection & { anchorNode: Node; focusNode: Node };
 };
 
-// Finds the DOM node and local offset matching a model text offset.
+/** Finds the DOM node and local offset matching a model text offset. */
 const getDomPoint = (root: Node, offset: number): { node: Node; offset: number } => {
   let remainingOffset = offset;
 
@@ -67,7 +68,7 @@ const getDomPoint = (root: Node, offset: number): { node: Node; offset: number }
   return { node: root, offset: root.childNodes.length };
 };
 
-// Converts a DOM selection inside a block into model selection offsets.
+/** Converts a DOM selection inside a block into model selection offsets. */
 const getModelSelection = (element: HTMLDivElement, blockId: string): EditorSelection | null => {
   const domSelection = getValidDomSelection(window.getSelection());
 
@@ -93,7 +94,7 @@ const getModelSelection = (element: HTMLDivElement, blockId: string): EditorSele
   };
 };
 
-// Escapes text before it is inserted into the block's rendered HTML.
+/** Escapes text before it is inserted into the block's rendered HTML. */
 const escapeHtml = (value: string): string =>
   value
     .replace(/&/g, '&amp;')
@@ -102,7 +103,7 @@ const escapeHtml = (value: string): string =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
-// Renders one editable document block and synchronizes its DOM selection with the model.
+/** Renders one editable block and synchronizes its DOM selection with the model. */
 export default function Block({ block }: BlockProps) {
   const { selection, applyInput, setSelection } = useEditorContext();
   const blockRef = useRef<HTMLDivElement>(null);
@@ -130,6 +131,7 @@ export default function Block({ block }: BlockProps) {
     })
     .join('');
 
+  /** Restores the model selection after React updates the editable DOM. */
   useLayoutEffect(() => {
     const element = blockRef.current;
 
@@ -156,6 +158,7 @@ export default function Block({ block }: BlockProps) {
     domSelection?.addRange(range);
   }, [block.id, selection, text]);
 
+  /** Stores the browser selection in model coordinates. */
   const handleSelect = (event: React.SyntheticEvent<HTMLDivElement>) => {
     const nextSelection = getModelSelection(event.currentTarget, block.id);
 
@@ -164,6 +167,7 @@ export default function Block({ block }: BlockProps) {
     }
   };
 
+  /** Inserts a newline when Enter is pressed inside the block. */
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key !== 'Enter') {
       return;

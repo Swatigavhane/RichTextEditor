@@ -48,8 +48,7 @@ export const clampSelectionPoint = (
     offset: clampOffset(point.offset, 0, blockLength),
   };
 };
-// Normalizes both endpoints of a selection against the current document.
-
+/** Normalizes both endpoints of a selection against the current document. */
 export const normalizeSelectionRange = (
   documentModel: Document,
   selectionRange: EditorSelection,
@@ -78,7 +77,7 @@ export const selectionPointToLinearOffset = (
   );
 };
 
-// Converts a block-based selection into document-wide offsets.
+/** Converts a block-based selection into document-wide offsets. */
 export const selectionRangeToLinearRange = (
   documentModel: Document,
   selectionRange: EditorSelection,
@@ -93,8 +92,7 @@ export const selectionRangeToLinearRange = (
     isBackward: anchor > focus,
   };
 };
-// Converts a document-wide offset into a block-based selection point.
-
+/** Converts a document-wide offset into a block-based selection point. */
 export const linearOffsetToSelectionPoint = (
   documentModel: Document,
   linearOffset: number,
@@ -113,8 +111,6 @@ export const linearOffsetToSelectionPoint = (
         offset: clampOffset(remainingOffset, 0, blockLength),
       };
     }
-    // Converts document-wide offsets back into model selection endpoints.
-
     remainingOffset -= blockLength + BLOCK_SEPARATOR_LENGTH;
   }
 
@@ -126,6 +122,7 @@ export const linearOffsetToSelectionPoint = (
   };
 };
 
+/** Converts document-wide offsets back into model selection endpoints. */
 export const linearRangeToSelectionRange = (
   documentModel: Document,
   linearRange: LinearSelection,

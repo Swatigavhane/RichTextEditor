@@ -3,8 +3,8 @@ import Toolbar from '../Toolbar/Toolbar';
 import { useEditorContext } from '../../hooks';
 import { getDocumentText } from '../../model';
 
+/** Renders the toolbar, editable block, and live word count. */
 export default function Editor() {
-  // Reads document state from context and renders the editor workspace.
   const editorViewModel = useEditorContext();
   const wordCount = getDocumentText(editorViewModel.documentModel)
     .trim()

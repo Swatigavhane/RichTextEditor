@@ -62,6 +62,7 @@ export const toggleInlineMark = (
   return applyMarkMutation(normalizedDocument, normalizedSelection, mark, mode);
 };
 
+/** Applies a mark to every text range covered by the selection. */
 export const applyInlineMark = (
   documentModel: Document,
   selectionRange: SelectionRange,
@@ -75,6 +76,7 @@ export const clearInlineMark = (
   mark: InlineMark,
 ): Document => applyMarkMutation(documentModel, selectionRange, mark, 'remove');
 
+/** Returns the distinct marks present in the selected text. */
 export const getSelectionMarks = (
   documentModel: Document,
   selectionRange: SelectionRange,

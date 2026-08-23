@@ -43,6 +43,7 @@ const commitDocumentChange = (
   };
 };
 
+/** Restores the document and selection stored in a history entry. */
 const restoreHistory = (
   history: EditorState['history'],
   snapshot: EditorSnapshot,

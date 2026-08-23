@@ -5,6 +5,7 @@ import { LEFT_BLOCK_SUFFIX, RIGHT_BLOCK_SUFFIX } from '../../constants';
 export { LEFT_BLOCK_SUFFIX, RIGHT_BLOCK_SUFFIX };
 
 // Creates a shallow span copy with independent marks.
+/** Creates a copy of a block-operation text span. */
 export const cloneSpan = (span: TextSpan): TextSpan => ({
   text: span.text,
   marks: [...span.marks],

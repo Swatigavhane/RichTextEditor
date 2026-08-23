@@ -37,6 +37,7 @@ export const deserializeDocument = (serializedDocument: string): DocumentModel =
   return normalizeDocument(parsedDocument);
 };
 
+/** Returns the combined text length of all runs in a block. */
 export const getBlockTextLength = (block: ParagraphBlock): number =>
   block.children.reduce((length, span) => length + span.text.length, 0);
 

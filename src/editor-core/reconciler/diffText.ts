@@ -4,6 +4,7 @@ export type TextDiff = {
   insertedText: string;
 };
 
+/** Finds the number of matching characters at the beginning of two strings. */
 const findCommonPrefixLength = (beforeText: string, afterText: string): number => {
   let prefixLength = 0;
 
@@ -18,6 +19,7 @@ const findCommonPrefixLength = (beforeText: string, afterText: string): number =
   return prefixLength;
 };
 
+/** Finds the matching suffix boundaries after a shared prefix. */
 const trimCommonSuffix = (
   beforeText: string,
   afterText: string,

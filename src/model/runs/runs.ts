@@ -38,4 +38,5 @@ export const mergeAdjacentRuns = (runs: TextRun[]): TextRun[] => {
 };
 
 // Canonicalizes a run collection by merging compatible neighbors.
+/** Normalizes a run list by removing empty runs and merging compatible neighbors. */
 export const normalizeRuns = (runs: TextRun[]): TextRun[] => mergeAdjacentRuns(runs);

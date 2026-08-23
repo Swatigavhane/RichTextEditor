@@ -10,6 +10,7 @@ import {
 export type MarkMutationMode = 'add' | 'remove';
 export type SpanVisitor = (span: TextSpan, overlapLength: number) => void;
 
+/** Creates a stable comparison key for an inline mark. */
 export const markKey = (mark: InlineMark): string =>
   typeof mark === 'string' ? mark : `${mark.type}:${mark.href}`;
 
@@ -66,8 +67,7 @@ export const getLinearSelectionBounds = (
     end: linearRange.end,
   };
 };
-// Visits each text span that overlaps a document-wide selection.
-
+/** Visits each text span that overlaps a document-wide selection. */
 export const forEachSelectedSpan = (
   documentModel: Document,
   start: number,
