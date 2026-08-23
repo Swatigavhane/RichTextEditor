@@ -1,5 +1,10 @@
 import Editor from './components/Editor';
+import { EditorProvider } from './hooks';
 
 export default function App() {
-  return <Editor />;
+  return (
+    <EditorProvider>
+      <Editor />
+    </EditorProvider>
+  );
 }

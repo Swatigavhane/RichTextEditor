@@ -1,20 +1,23 @@
 import { buildSelection } from '../../utils/buildSelection';
-import { createEmptyDocument, toggleInlineMark } from '../../model';
-import { TOOLBAR_COMMANDS } from '../../editor-core/commands';
-import type { EditorAction, EditorState } from './editor.types';
+import { createEmptyDocument, splitBlock, toggleInlineMark } from '../../model';
+import { normalizeSelectionRange } from '../../editor-core/selection';
+import { resolveEditorCommandMark } from '../../editor-core/commands';
+import { applyInputEvent } from '../../editor-core/reconciler';
+import { diffText } from '../../editor-core/reconciler/diffText';
+import {
+  createHistoryStack,
+  pushHistoryEntry,
+  redoHistory,
+  undoHistory,
+} from '../../editor-core/history';
+import { EDITOR_ACTIONS } from './editor.types';
+import type { EditorAction, EditorSnapshot, EditorState } from './editor.types';
 
 const INITIAL_BLOCK_ID = 'block-1';
 
-const COMMAND_TO_MARK = new Map(
-  TOOLBAR_COMMANDS.map((command) => [command.id, command.mark] as const),
-);
-
-const resolveCommandMark = (command: Extract<EditorAction, { type: 'command/run' }>['command']) =>
-  COMMAND_TO_MARK.get(command);
-
 const withSelection = (
   state: EditorState,
-  selection: Extract<EditorAction, { type: 'selection/set' }>['selection'],
+  selection: Extract<EditorAction, { type: typeof EDITOR_ACTIONS.SET_SELECTION }>['selection'],
 ): EditorState => ({
   ...state,
   selection,
@@ -24,23 +27,75 @@ const withToggledMark = (
   state: EditorState,
   mark: Parameters<typeof toggleInlineMark>[2],
 ): EditorState => ({
-  ...state,
-  documentModel: toggleInlineMark(state.documentModel, state.selection, mark),
+  ...withDocumentModel(
+    state,
+    toggleInlineMark(state.documentModel, state.selection, mark),
+  ),
 });
 
-export const createInitialState = (): EditorState => ({
-  documentModel: createEmptyDocument(),
-  selection: buildSelection(INITIAL_BLOCK_ID, 0, INITIAL_BLOCK_ID, 0),
+const withDocumentModel = (state: EditorState, documentModel: EditorState['documentModel']): EditorState => ({
+  ...state,
+  documentModel,
+  selection: normalizeSelectionRange(documentModel, state.selection),
+  history: pushHistoryEntry(state.history, {
+    state: {
+      documentModel,
+      selection: normalizeSelectionRange(documentModel, state.selection),
+    },
+    timestamp: Date.now(),
+  }),
 });
+
+const restoreHistory = (
+  history: EditorState['history'],
+  snapshot: EditorSnapshot,
+): EditorState => ({
+  ...snapshot,
+  history,
+});
+
+const splitDocumentBlock = (
+  state: EditorState,
+  blockId: string,
+  offset: number,
+): EditorState => {
+  const blockIndex = state.documentModel.blocks.findIndex((block) => block.id === blockId);
+  const block = state.documentModel.blocks[blockIndex];
+
+  if (!block) {
+    return state;
+  }
+
+  const [leftBlock, rightBlock] = splitBlock(block, offset);
+  const blocks = [...state.documentModel.blocks];
+  blocks.splice(blockIndex, 1, leftBlock, rightBlock);
+
+  return withDocumentModel(
+    {
+      ...state,
+      selection: buildSelection(rightBlock.id, 0, rightBlock.id, 0),
+    },
+    { blocks },
+  );
+};
+
+export const createInitialState = (): EditorState => {
+  const documentModel = createEmptyDocument();
+  const selection = buildSelection(INITIAL_BLOCK_ID, 0, INITIAL_BLOCK_ID, 0);
+
+  return {
+    documentModel,
+    selection,
+    history: createHistoryStack({ documentModel, selection }),
+  };
+};
 
 export const editorReducer = (state: EditorState, action: EditorAction): EditorState => {
   switch (action.type) {
-    case 'selection/set':
+    case EDITOR_ACTIONS.SET_SELECTION:
       return withSelection(state, action.selection);
-    case 'mark/toggle':
-      return withToggledMark(state, action.mark);
-    case 'command/run': {
-      const commandMark = resolveCommandMark(action.command);
+    case EDITOR_ACTIONS.RUN_COMMAND: {
+      const commandMark = resolveEditorCommandMark(action.command);
 
       if (!commandMark) {
         return state;
@@ -48,6 +103,40 @@ export const editorReducer = (state: EditorState, action: EditorAction): EditorS
 
       return withToggledMark(state, commandMark);
     }
+    case EDITOR_ACTIONS.APPLY_INPUT: {
+      const nextDocumentModel = applyInputEvent(state.documentModel, {
+        beforeText: action.beforeText,
+        afterText: action.afterText,
+        selection: action.selection,
+      });
+      const textDiff = diffText(action.beforeText, action.afterText);
+      const caretOffset = textDiff.start + textDiff.insertedText.length;
+      const blockId = action.selection.anchor.blockId;
+
+      return withDocumentModel(
+        {
+          ...state,
+          selection: buildSelection(blockId, caretOffset, blockId, caretOffset),
+        },
+        nextDocumentModel,
+      );
+    }
+    case EDITOR_ACTIONS.UNDO: {
+      const history = undoHistory(state.history);
+
+      return history === state.history
+        ? state
+        : restoreHistory(history, history.present.state);
+    }
+    case EDITOR_ACTIONS.REDO: {
+      const history = redoHistory(state.history);
+
+      return history === state.history
+        ? state
+        : restoreHistory(history, history.present.state);
+    }
+    case EDITOR_ACTIONS.SPLIT_BLOCK:
+      return splitDocumentBlock(state, action.blockId, action.offset);
     default:
       return state;
   }

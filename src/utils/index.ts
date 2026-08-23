@@ -1,2 +1,2 @@
-export * from './buildDocument';
-export * from './buildSelection';
+export { buildDocument } from './buildDocument';
+export { buildSelection } from './buildSelection';

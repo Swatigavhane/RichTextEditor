@@ -1,15 +1,17 @@
-import { useMemo, useReducer } from 'react';
+import { createContext, createElement, useContext, useMemo, useReducer } from 'react';
+import type { ReactNode } from 'react';
 import type { EditorSelection } from '../editor-core/selection';
+import { EditorCommand } from '../editor-core/commands';
 import type { EditorCommandId } from '../editor-core/commands';
 import {
+  EDITOR_ACTIONS,
   createInitialState,
   editorReducer,
   selectActiveMarks,
   selectSerializedDocument,
-  selectToolbarCommands,
 } from './editor';
 
-export const useEditor = () => {
+const useEditorState = () => {
   const [editorState, dispatch] = useReducer(editorReducer, undefined, createInitialState);
 
   const activeMarks = useMemo(() => selectActiveMarks(editorState), [editorState]);
@@ -19,23 +21,69 @@ export const useEditor = () => {
     [editorState],
   );
 
-  const toolbarCommands = useMemo(() => selectToolbarCommands(activeMarks), [activeMarks]);
-
   const setSelection = (nextSelection: EditorSelection) => {
-    dispatch({ type: 'selection/set', selection: nextSelection });
+    dispatch({ type: EDITOR_ACTIONS.SET_SELECTION, selection: nextSelection });
   };
 
   const runCommand = (command: EditorCommandId) => {
-    dispatch({ type: 'command/run', command });
+    if (command === EditorCommand.UNDO) {
+      dispatch({ type: EDITOR_ACTIONS.UNDO });
+      return;
+    }
+
+    if (command === EditorCommand.REDO) {
+      dispatch({ type: EDITOR_ACTIONS.REDO });
+      return;
+    }
+
+    dispatch({ type: EDITOR_ACTIONS.RUN_COMMAND, command });
+  };
+
+  const applyInput = (beforeText: string, afterText: string, selection: EditorSelection) => {
+    dispatch({
+      type: EDITOR_ACTIONS.APPLY_INPUT,
+      beforeText,
+      afterText,
+      selection,
+    });
+  };
+
+  const splitBlockAt = (blockId: string, offset: number) => {
+    dispatch({ type: EDITOR_ACTIONS.SPLIT_BLOCK, blockId, offset });
   };
 
   return {
     documentModel: editorState.documentModel,
     selection: editorState.selection,
     activeMarks,
-    toolbarCommands,
     serializedDocument,
     setSelection,
     runCommand,
+    applyInput,
+    splitBlockAt,
+    canUndo: editorState.history.past.length > 0,
+    canRedo: editorState.history.future.length > 0,
   };
+};
+
+type EditorViewModel = ReturnType<typeof useEditorState>;
+
+const EditorContext = createContext<EditorViewModel | null>(null);
+
+export const EditorProvider = ({ children }: { children: ReactNode }) => {
+  const editorViewModel = useEditorState();
+
+  return createElement(EditorContext.Provider, { value: editorViewModel }, children);
+};
+
+export const useEditor = () => useEditorContext();
+
+export const useEditorContext = (): EditorViewModel => {
+  const editorContext = useContext(EditorContext);
+
+  if (!editorContext) {
+    throw new Error('useEditorContext must be used within an EditorProvider');
+  }
+
+  return editorContext;
 };
