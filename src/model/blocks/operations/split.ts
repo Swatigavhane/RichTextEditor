@@ -10,12 +10,14 @@ import {
   getBlockTextLength,
 } from '../utils/shared';
 
+// Creates one side of a split block with a deterministic identifier.
 const createSplitBlock = (sourceBlock: Block, suffix: string, spans: TextSpan[]): Block => ({
   type: sourceBlock.type,
   id: `${sourceBlock.id}-${suffix}`,
   children: mergeAdjacentRuns(spans),
 });
 
+// Divides runs into left and right collections at a text offset.
 const splitSpanCollection = (
   spans: TextSpan[],
   splitOffset: number,

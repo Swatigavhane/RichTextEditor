@@ -1,8 +1,10 @@
 import type { Mark, TextRun } from '../types';
 
+// Creates a comparable string representation for an inline mark.
 const markSignature = (mark: Mark): string =>
   typeof mark === 'string' ? mark : `${mark.type}:${mark.href}`;
 
+// Checks whether two mark arrays contain the same marks in the same order.
 const sameMarks = (left: Mark[], right: Mark[]): boolean =>
   left.length === right.length &&
   left.every((mark, index) => markSignature(mark) === markSignature(right[index]));

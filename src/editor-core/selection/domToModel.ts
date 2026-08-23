@@ -2,6 +2,7 @@ import type { Document } from '../../model';
 import { selectionRangeToLinearRange } from './selection';
 import type { EditorSelection, LinearSelection } from './types';
 
+// Converts the current model selection into document-wide offsets.
 export const domToModelSelection = (
   documentModel: Document,
   selection: EditorSelection,

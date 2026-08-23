@@ -28,6 +28,7 @@ export const getBlockStartOffset = (documentModel: Document, blockIndex: number)
   return offset;
 };
 
+// Returns the block index for an identifier, falling back to the first block.
 export const findBlockIndexById = (documentModel: Document, blockId: string): number => {
   const index = documentModel.blocks.findIndex((block) => block.id === blockId);
 

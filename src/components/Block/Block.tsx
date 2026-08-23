@@ -31,6 +31,7 @@ const getTextOffset = (root: Node, target: Node, targetOffset: number): number =
   return offset;
 };
 
+// Returns the DOM selection only when both endpoints are available.
 const getValidDomSelection = (
   domSelection: Selection | null,
 ): (Selection & { anchorNode: Node; focusNode: Node }) | null => {
@@ -45,6 +46,7 @@ const getValidDomSelection = (
   return domSelection as Selection & { anchorNode: Node; focusNode: Node };
 };
 
+// Finds the DOM node and local offset matching a model text offset.
 const getDomPoint = (root: Node, offset: number): { node: Node; offset: number } => {
   let remainingOffset = offset;
 
@@ -65,6 +67,7 @@ const getDomPoint = (root: Node, offset: number): { node: Node; offset: number }
   return { node: root, offset: root.childNodes.length };
 };
 
+// Converts a DOM selection inside a block into model selection offsets.
 const getModelSelection = (element: HTMLDivElement, blockId: string): EditorSelection | null => {
   const domSelection = getValidDomSelection(window.getSelection());
 
@@ -90,6 +93,7 @@ const getModelSelection = (element: HTMLDivElement, blockId: string): EditorSele
   };
 };
 
+// Escapes text before it is inserted into the block's rendered HTML.
 const escapeHtml = (value: string): string =>
   value
     .replace(/&/g, '&amp;')
@@ -161,21 +165,22 @@ export default function Block({ block }: BlockProps) {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (
-      event.key !== 'Enter' ||
-      selection.anchor.blockId !== block.id ||
-      selection.focus.blockId !== block.id ||
-      selection.anchor.offset !== selection.focus.offset
-    ) {
+    if (event.key !== 'Enter') {
+      return;
+    }
+
+    const currentSelection = getModelSelection(event.currentTarget, block.id);
+
+    if (!currentSelection) {
       return;
     }
 
     event.preventDefault();
-    const start = Math.min(selection.anchor.offset, selection.focus.offset);
-    const end = Math.max(selection.anchor.offset, selection.focus.offset);
+    const start = Math.min(currentSelection.anchor.offset, currentSelection.focus.offset);
+    const end = Math.max(currentSelection.anchor.offset, currentSelection.focus.offset);
     const nextText = `${text.slice(0, start)}\n${text.slice(end)}`;
 
-    applyInput(text, nextText, selection);
+    applyInput(text, nextText, currentSelection);
   };
 
   return (

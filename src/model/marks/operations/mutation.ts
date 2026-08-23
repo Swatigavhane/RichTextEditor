@@ -16,9 +16,11 @@ import {
   markKey,
 } from '../utils/shared';
 
+// Checks whether a mark already exists in a mark collection.
 const markExists = (marks: InlineMark[], mark: InlineMark): boolean =>
   marks.some((currentMark) => markKey(currentMark) === markKey(mark));
 
+// Adds a mark while preserving existing compatible marks.
 const addMark = (marks: InlineMark[], mark: InlineMark): InlineMark[] => {
   if (typeof mark === 'string') {
     if (markExists(marks, mark)) {
@@ -40,6 +42,7 @@ const addMark = (marks: InlineMark[], mark: InlineMark): InlineMark[] => {
   return [...cloneMarks(filteredMarks), { ...mark }];
 };
 
+// Removes a matching mark from a mark collection.
 const removeMark = (marks: InlineMark[], mark: InlineMark): InlineMark[] => {
   if (typeof mark === 'string') {
     return marks
@@ -52,6 +55,7 @@ const removeMark = (marks: InlineMark[], mark: InlineMark): InlineMark[] => {
     .map((currentMark) => (typeof currentMark === 'string' ? currentMark : { ...currentMark }));
 };
 
+// Applies a mark mutation to the part of a block covered by a selection.
 const transformBlockRange = (
   block: Block,
   startOffset: number,

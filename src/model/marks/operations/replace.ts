@@ -14,6 +14,7 @@ import {
 } from '../../../editor-core/selection/selection';
 import { cloneBlock, cloneMarks, findBlockIndexById, getBlockStartOffset } from '../utils/shared';
 
+// Calculates the collapsed caret after replacing a selected range.
 const updateSelectionAfterRangeChange = (
   documentModel: Document,
   selectionRange: SelectionRange,

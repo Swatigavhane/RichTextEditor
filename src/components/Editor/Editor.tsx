@@ -2,7 +2,6 @@ import Block from '../Block/Block';
 import Toolbar from '../Toolbar/Toolbar';
 import { useEditorContext } from '../../hooks';
 import { getDocumentText } from '../../model';
-import type { Document } from '../../model';
 
 export default function Editor() {
   // Reads document state from context and renders the editor workspace.
@@ -17,9 +16,7 @@ export default function Editor() {
       <section className="editor-shell">
         <Toolbar />
         <div className="editor-canvas">
-          {editorViewModel.documentModel.blocks.map((block: Document['blocks'][number]) => (
-            <Block key={block.id} block={block} />
-          ))}
+          <Block block={editorViewModel.documentModel.blocks[0]} />
         </div>
         <footer className="editor-footer">
           <span>{`${wordCount} words`}</span>

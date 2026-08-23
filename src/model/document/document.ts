@@ -5,6 +5,7 @@ import { cloneDocument } from './core/clone';
 import { normalizeDocumentModel } from './core/normalize';
 import { isDocumentModel } from './core/validation';
 
+// Creates a paragraph block with optional plain text content.
 export const createParagraph = (id: string, text = ''): ParagraphBlock => ({
   type: 'paragraph',
   id,
@@ -39,6 +40,7 @@ export const deserializeDocument = (serializedDocument: string): DocumentModel =
 export const getBlockTextLength = (block: ParagraphBlock): number =>
   block.children.reduce((length, span) => length + span.text.length, 0);
 
+// Returns all block text joined with document separators.
 export const getDocumentText = (documentModel: DocumentModel): string =>
   documentModel.blocks.map((block) => block.children.map((span) => span.text).join('')).join('\n');
 

@@ -3,12 +3,15 @@ import { getBlockTextLength, getDocumentText, createParagraph } from '../../mode
 import { BLOCK_SEPARATOR_LENGTH, DEFAULT_BLOCK_ID } from '../../model/constants';
 import type { EditorSelection, LinearSelection, SelectionPoint } from './types';
 
+// Restricts an offset to a valid inclusive range.
 const clampOffset = (offset: number, minimum: number, maximum: number): number =>
   Math.min(Math.max(offset, minimum), maximum);
 
+// Returns a block by index or a default paragraph when it is missing.
 const getBlockOrDefault = (documentModel: Document, blockIndex: number) =>
   documentModel.blocks[blockIndex] ?? createParagraph(DEFAULT_BLOCK_ID);
 
+// Calculates a block's starting offset in the complete document text.
 const getBlockStartOffset = (documentModel: Document, blockIndex: number): number => {
   let offset = 0;
   const lastIndex = documentModel.blocks.length - 1;
@@ -24,6 +27,7 @@ const getBlockStartOffset = (documentModel: Document, blockIndex: number): numbe
   return offset;
 };
 
+// Finds a block index by identifier and falls back to the first block.
 const getBlockIndexById = (documentModel: Document, blockId: string): number => {
   const blockIndex = documentModel.blocks.findIndex((block) => block.id === blockId);
 
@@ -54,10 +58,12 @@ export const normalizeSelectionRange = (
   focus: clampSelectionPoint(documentModel, selectionRange.focus),
 });
 
+// Reports whether both selection endpoints refer to the same position.
 export const isSelectionCollapsed = (selectionRange: EditorSelection): boolean =>
   selectionRange.anchor.blockId === selectionRange.focus.blockId &&
   selectionRange.anchor.offset === selectionRange.focus.offset;
 
+// Converts a block-relative selection point into a document-wide offset.
 export const selectionPointToLinearOffset = (
   documentModel: Document,
   point: SelectionPoint,

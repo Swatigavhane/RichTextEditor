@@ -15,6 +15,7 @@ import type { EditorAction, EditorSnapshot, EditorState } from './editor.types';
 
 const INITIAL_BLOCK_ID = 'block-1';
 
+// Replaces the current model selection without changing document history.
 const withSelection = (
   state: EditorState,
   selection: Extract<EditorAction, { type: typeof EDITOR_ACTIONS.SET_SELECTION }>['selection'],

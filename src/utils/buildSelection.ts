@@ -1,5 +1,6 @@
 import type { EditorSelection } from '../editor-core/selection';
 
+// Creates a model selection from two block-relative endpoints.
 export const buildSelection = (
   anchorBlockId: string,
   anchorOffset: number,

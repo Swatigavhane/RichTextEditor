@@ -9,6 +9,7 @@ import { applyMarkMutation } from './operations/mutation';
 import { forEachSelectedSpan, getLinearSelectionBounds, markKey } from './utils/shared';
 export { deleteSelectionRange, replaceSelectionWithText } from './operations/replace';
 
+// Reports whether the selected text contains none, some, or all of a mark.
 export const getMarkCoverage = (
   documentModel: Document,
   selectionRange: SelectionRange,
