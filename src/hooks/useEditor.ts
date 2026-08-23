@@ -1,8 +1,8 @@
-import { createContext, createElement, useContext, useMemo, useReducer } from 'react';
-import type { ReactNode } from 'react';
+import { useMemo, useReducer } from 'react';
 import type { EditorSelection } from '../editor-core/selection';
+import type { Document } from '../model';
+import type { ActiveMarkId, EditorCommandId } from '../editor-core/commands';
 import { EditorCommand } from '../editor-core/commands';
-import type { EditorCommandId } from '../editor-core/commands';
 import {
   EDITOR_ACTIONS,
   createInitialState,
@@ -11,9 +11,28 @@ import {
   selectSerializedDocument,
 } from './editor';
 
+type EditorViewModel = {
+  documentModel: Document;
+  selection: EditorSelection;
+  activeMarks: ActiveMarkId[];
+  serializedDocument: string;
+  setSelection: (selection: EditorSelection) => void;
+  runCommand: (command: EditorCommandId) => void;
+  applyInput: (beforeText: string, afterText: string, selection: EditorSelection) => void;
+  insertNewline: (selection: EditorSelection) => void;
+  insertText: (text: string, selection: EditorSelection) => void;
+  applyLink: (href: string, selection: EditorSelection) => void;
+  canUndo: boolean;
+  canRedo: boolean;
+};
+
 /** Builds the context view model around the editor reducer. */
-const useEditorState = () => {
-  const [editorState, dispatch] = useReducer(editorReducer, undefined, createInitialState);
+const useEditorState = (initialDocumentModel?: Document): EditorViewModel => {
+  const [editorState, dispatch] = useReducer(
+    editorReducer,
+    initialDocumentModel,
+    createInitialState,
+  );
 
   const activeMarks = useMemo(() => selectActiveMarks(editorState), [editorState]);
 
@@ -80,25 +99,9 @@ const useEditorState = () => {
   };
 };
 
-type EditorViewModel = ReturnType<typeof useEditorState>;
-
-const EditorContext = createContext<EditorViewModel | null>(null);
-
-export const EditorProvider = ({ children }: { children: ReactNode }) => {
-  /** Makes editor state and commands available to all editor descendants. */
-  const editorViewModel = useEditorState();
-
-  return createElement(EditorContext.Provider, { value: editorViewModel }, children);
-};
-
 /** Provides the editor context through the public hook API. */
 /** Reads editor context and fails when used outside its provider. */
-export const useEditorContext = (): EditorViewModel => {
-  const editorContext = useContext(EditorContext);
-
-  if (!editorContext) {
-    throw new Error('useEditorContext must be used within an EditorProvider');
-  }
-
-  return editorContext;
-};
+// The useEditorContext hook has been removed as it is no longer needed.
+/** Creates the editor view model from an optional initial document. */
+export const useEditor = (initialDocumentModel?: Document): EditorViewModel =>
+  useEditorState(initialDocumentModel);

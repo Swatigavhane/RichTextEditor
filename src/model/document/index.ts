@@ -3,7 +3,6 @@ export {
   createEmptyDocument,
   normalizeDocument,
   serializeDocument,
-  deserializeDocument,
   getBlockTextLength,
   getDocumentText,
   cloneDocument,

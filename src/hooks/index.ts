@@ -1,2 +1,2 @@
-export { EditorProvider, useEditorContext } from './useEditor';
+export { useEditor } from './useEditor';
 export { useRestoreEditorSelection } from './useRestoreEditorSelection';

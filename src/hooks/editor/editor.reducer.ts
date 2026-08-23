@@ -3,6 +3,7 @@ import {
   applyInlineMark,
   clearInlineMark,
   createEmptyDocument,
+  normalizeDocument,
   replaceSelectionWithText,
   toggleInlineMark,
 } from '../../model';
@@ -59,9 +60,12 @@ const restoreHistory = (
 });
 
 // Creates the initial empty document state and history entry.
-export const createInitialState = (): EditorState => {
-  const documentModel = createEmptyDocument();
-  const selection = buildSelection(INITIAL_BLOCK_ID, 0, INITIAL_BLOCK_ID, 0);
+export const createInitialState = (initialDocument?: EditorState['documentModel']): EditorState => {
+  const documentModel = initialDocument
+    ? normalizeDocument(initialDocument)
+    : createEmptyDocument();
+  const firstBlockId = documentModel.blocks[0]?.id ?? INITIAL_BLOCK_ID;
+  const selection = buildSelection(firstBlockId, 0, firstBlockId, 0);
 
   return {
     documentModel,

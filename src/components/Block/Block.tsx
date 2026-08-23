@@ -1,10 +1,15 @@
 import { useRef } from 'react';
 import type { Block as BlockModel } from '../../model';
 import type { EditorSelection } from '../../editor-core/selection';
-import { useEditorContext, useRestoreEditorSelection } from '../../hooks';
+import { useRestoreEditorSelection } from '../../hooks';
 
 type BlockProps = {
   block: BlockModel;
+  selection: EditorSelection;
+  applyInput: (beforeText: string, afterText: string, selection: EditorSelection) => void;
+  setSelection: (selection: EditorSelection) => void;
+  insertNewline: (selection: EditorSelection) => void;
+  insertText: (text: string, selection: EditorSelection) => void;
 };
 
 /** Converts a DOM boundary position into a text offset relative to the block. */
@@ -107,8 +112,14 @@ const renderBlockHtml = (block: BlockModel): string =>
     .join('');
 
 /** Renders one editable block and synchronizes its DOM selection with the model. */
-export default function Block({ block }: BlockProps) {
-  const { selection, applyInput, setSelection, insertNewline, insertText } = useEditorContext();
+export default function Block({
+  block,
+  selection,
+  applyInput,
+  setSelection,
+  insertNewline,
+  insertText,
+}: BlockProps) {
   const blockRef = useRef<HTMLDivElement>(null);
   const text = block.children.map((run) => run.text).join('');
 

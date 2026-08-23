@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { EditorCommand } from '../../editor-core/commands';
 import type { ActiveMarkId, EditorCommandId } from '../../editor-core/commands';
-import { useEditorContext } from '../../hooks';
+import type { EditorSelection } from '../../editor-core/selection';
 import EditorButton from '../EditorButton/EditorButton';
 import LinkPopover from '../LinkPopover/LinkPopover';
 
@@ -41,8 +41,24 @@ const isCommandDisabled = (
 };
 
 /** Renders formatting and history commands connected to the editor context. */
-export default function Toolbar() {
-  const { activeMarks, runCommand, applyLink, selection, canUndo, canRedo } = useEditorContext();
+type ToolbarProps = {
+  activeMarks: ActiveMarkId[];
+  runCommand: (command: EditorCommandId) => void;
+  applyLink: (href: string, selection: EditorSelection) => void;
+  selection: EditorSelection;
+  canUndo: boolean;
+  canRedo: boolean;
+};
+
+/** Renders formatting and history commands for the editor. */
+export default function Toolbar({
+  activeMarks,
+  runCommand,
+  applyLink,
+  selection,
+  canUndo,
+  canRedo,
+}: ToolbarProps) {
   const [isLinkOpen, setIsLinkOpen] = useState(false);
   const [linkHref, setLinkHref] = useState('');
 

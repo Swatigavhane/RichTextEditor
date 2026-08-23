@@ -3,7 +3,6 @@ import type { DocumentModel, ParagraphBlock } from '../types';
 import { DEFAULT_BLOCK_ID, EMPTY_TEXT_SPAN } from '../constants';
 import { cloneDocument } from './core/clone';
 import { normalizeDocumentModel } from './core/normalize';
-import { isDocumentModel } from './core/validation';
 
 // Creates a paragraph block with optional plain text content.
 export const createParagraph = (id: string, text = ''): ParagraphBlock => ({
@@ -25,17 +24,6 @@ export const normalizeDocument = (documentModel: DocumentModel): DocumentModel =
 // Serializes a normalized document to JSON.
 export const serializeDocument = (documentModel: DocumentModel): string =>
   JSON.stringify(normalizeDocument(documentModel));
-
-// Parses and validates a serialized document before normalizing it.
-export const deserializeDocument = (serializedDocument: string): DocumentModel => {
-  const parsedDocument = JSON.parse(serializedDocument) as unknown;
-
-  if (!isDocumentModel(parsedDocument)) {
-    throw new Error('Invalid document model');
-  }
-
-  return normalizeDocument(parsedDocument);
-};
 
 /** Returns the combined text length of all runs in a block. */
 export const getBlockTextLength = (block: ParagraphBlock): number =>

@@ -1,12 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  createEmptyDocument,
-  createParagraph,
-  deserializeDocument,
-  getDocumentText,
-  normalizeDocument,
-  serializeDocument,
-} from './index';
+import { createEmptyDocument, normalizeDocument } from './index';
 import type { Document, InlineMark, ParagraphBlock, TextSpan } from '../types';
 
 const createRng = (seed: number) => {
@@ -55,7 +48,6 @@ const randomSpan = (next: () => number): TextSpan => ({
   text: randomText(next, 4),
   marks: randomMarks(next),
 });
-
 const randomBlock = (next: () => number, index: number): ParagraphBlock => ({
   type: 'paragraph',
   id: `block-${index + 1}`,
@@ -89,27 +81,7 @@ const expectCanonicalSpans = (documentModel: Document) => {
   }
 };
 
-describe('document serialization', () => {
-  it('serializes and deserializes a canonical document', () => {
-    const documentModel = normalizeDocument({
-      blocks: [
-        createParagraph('block-1', 'Hello'),
-        {
-          type: 'paragraph',
-          id: 'block-2',
-          children: [
-            { text: ' ', marks: [] },
-            { text: 'world', marks: [] },
-          ],
-        },
-      ],
-    });
-
-    const roundTripped = deserializeDocument(serializeDocument(documentModel));
-
-    expect(roundTripped).toEqual(documentModel);
-  });
-
+describe('document model', () => {
   it('creates an empty document', () => {
     expect(createEmptyDocument()).toEqual({
       blocks: [
@@ -132,19 +104,6 @@ describe('document serialization', () => {
 
       expect(normalizedAgain).toEqual(normalized);
       expectCanonicalSpans(normalized);
-    }
-  });
-
-  it('round-trips normalized randomized documents through serialization', () => {
-    const next = createRng(4321);
-
-    for (let index = 0; index < 100; index += 1) {
-      const normalized = normalizeDocument(randomDocument(next));
-      const serialized = serializeDocument(normalized);
-      const deserialized = deserializeDocument(serialized);
-
-      expect(deserialized).toEqual(normalized);
-      expect(getDocumentText(deserialized)).toBe(getDocumentText(normalized));
     }
   });
 });
