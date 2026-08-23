@@ -162,10 +162,12 @@ export const replaceSelectionWithText = (
     nextDocument.blocks[index] = cloneBlock(normalizedDocument.blocks[index]);
   }
 
+  const normalizedNextDocument = normalizeDocument(nextDocument);
+
   return {
-    document: normalizeDocument(nextDocument),
+    document: normalizedNextDocument,
     selection: updateSelectionAfterRangeChange(
-      normalizedDocument,
+      normalizedNextDocument,
       normalizedSelection,
       text.length,
     ),

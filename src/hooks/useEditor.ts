@@ -49,6 +49,16 @@ const useEditorState = () => {
     });
   };
 
+  /** Inserts a newline at the current selection. */
+  const insertNewline = (selection: EditorSelection) => {
+    dispatch({ type: EDITOR_ACTIONS.INSERT_NEWLINE, selection });
+  };
+
+  /** Applies a URL link mark to the current selection. */
+  const applyLink = (href: string, selection: EditorSelection) => {
+    dispatch({ type: EDITOR_ACTIONS.APPLY_LINK, href, selection });
+  };
+
   return {
     documentModel: editorState.documentModel,
     selection: editorState.selection,
@@ -57,6 +67,8 @@ const useEditorState = () => {
     setSelection,
     runCommand,
     applyInput,
+    insertNewline,
+    applyLink,
     canUndo: editorState.history.past.length > 0,
     canRedo: editorState.history.future.length > 0,
   };

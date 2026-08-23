@@ -1,5 +1,10 @@
 import { buildSelection } from '../../utils/buildSelection';
-import { createEmptyDocument, toggleInlineMark } from '../../model';
+import {
+  applyInlineMark,
+  createEmptyDocument,
+  replaceSelectionWithText,
+  toggleInlineMark,
+} from '../../model';
 import { normalizeSelectionRange } from '../../editor-core/selection';
 import { resolveEditorCommandMark } from '../../editor-core/commands';
 import { applyInputEvent } from '../../editor-core/reconciler';
@@ -106,6 +111,27 @@ export const editorReducer = (state: EditorState, action: EditorAction): EditorS
       const history = redoHistory(state.history);
 
       return history === state.history ? state : restoreHistory(history, history.present.state);
+    }
+    case EDITOR_ACTIONS.INSERT_NEWLINE: {
+      const result = replaceSelectionWithText(state.documentModel, action.selection, '\n', []);
+
+      return commitDocumentChange(state, result.document, result.selection);
+    }
+    case EDITOR_ACTIONS.APPLY_LINK: {
+      const href = action.href.trim();
+
+      if (!href) {
+        return state;
+      }
+
+      return commitDocumentChange(
+        state,
+        applyInlineMark(state.documentModel, action.selection, {
+          type: 'link',
+          href,
+        }),
+        action.selection,
+      );
     }
     default:
       return state;

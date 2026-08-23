@@ -31,6 +31,7 @@ export { splitRunAt, mergeAdjacentRuns, normalizeRuns } from './runs';
 export {
   getMarkCoverage,
   toggleInlineMark,
+  applyInlineMark,
   getSelectionMarks,
   replaceSelectionWithText,
 } from './marks';

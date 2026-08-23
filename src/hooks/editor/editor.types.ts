@@ -20,6 +20,8 @@ export const EDITOR_ACTIONS = {
   APPLY_INPUT: 'APPLY_INPUT',
   UNDO: 'UNDO',
   REDO: 'REDO',
+  INSERT_NEWLINE: 'INSERT_NEWLINE',
+  APPLY_LINK: 'APPLY_LINK',
 } as const;
 
 export type EditorAction =
@@ -42,4 +44,13 @@ export type EditorAction =
     }
   | {
       type: typeof EDITOR_ACTIONS.REDO;
+    }
+  | {
+      type: typeof EDITOR_ACTIONS.INSERT_NEWLINE;
+      selection: EditorSelection;
+    }
+  | {
+      type: typeof EDITOR_ACTIONS.APPLY_LINK;
+      selection: EditorSelection;
+      href: string;
     };

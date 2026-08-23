@@ -105,7 +105,7 @@ const escapeHtml = (value: string): string =>
 
 /** Renders one editable block and synchronizes its DOM selection with the model. */
 export default function Block({ block }: BlockProps) {
-  const { selection, applyInput, setSelection } = useEditorContext();
+  const { selection, applyInput, setSelection, insertNewline } = useEditorContext();
   const blockRef = useRef<HTMLDivElement>(null);
   const text = block.children.map((run) => run.text).join('');
 
@@ -173,18 +173,10 @@ export default function Block({ block }: BlockProps) {
       return;
     }
 
-    const currentSelection = getModelSelection(event.currentTarget, block.id);
-
-    if (!currentSelection) {
-      return;
-    }
+    const currentSelection = getModelSelection(event.currentTarget, block.id) ?? selection;
 
     event.preventDefault();
-    const start = Math.min(currentSelection.anchor.offset, currentSelection.focus.offset);
-    const end = Math.max(currentSelection.anchor.offset, currentSelection.focus.offset);
-    const nextText = `${text.slice(0, start)}\n${text.slice(end)}`;
-
-    applyInput(text, nextText, currentSelection);
+    insertNewline(currentSelection);
   };
 
   return (

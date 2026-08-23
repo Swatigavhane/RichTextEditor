@@ -61,6 +61,21 @@ describe('apply input event', () => {
     expect(getDocumentText(result)).toBe('Ho');
   });
 
+  it('preserves the caret after consecutive newline insertions', () => {
+    const firstResult = applyInputEvent(createEmptyDocument(), {
+      beforeText: '',
+      afterText: '\n',
+      selection: buildSelection('block-1', 0, 'block-1', 0),
+    });
+    const secondResult = applyInputEvent(firstResult, {
+      beforeText: '\n',
+      afterText: '\n\n',
+      selection: buildSelection('block-1', 1, 'block-1', 1),
+    });
+
+    expect(getDocumentText(secondResult)).toBe('\n\n');
+  });
+
   it('preserves expected text in randomized single-block edits', () => {
     const next = createRng(1224);
 

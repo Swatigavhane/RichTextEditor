@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { EditorCommand } from '../../editor-core/commands';
 import type { ActiveMarkId, EditorCommandId } from '../../editor-core/commands';
 import { useEditorContext } from '../../hooks';
+import EditorButton from '../EditorButton/EditorButton';
+import LinkPopover from '../LinkPopover/LinkPopover';
 
 type ToolbarButton = {
   command: EditorCommandId;
@@ -9,10 +12,13 @@ type ToolbarButton = {
   mark: ActiveMarkId | null;
 };
 
-const toolbarButtons: ToolbarButton[] = [
+const formattingButtons: ToolbarButton[] = [
   { command: EditorCommand.TOGGLE_BOLD, label: 'Bold', icon: 'B', mark: 'bold' },
   { command: EditorCommand.TOGGLE_ITALIC, label: 'Italic', icon: 'I', mark: 'italic' },
   { command: EditorCommand.SET_LINK, label: 'Link', icon: 'Link', mark: 'link' },
+];
+
+const historyButtons: ToolbarButton[] = [
   { command: EditorCommand.UNDO, label: 'Undo', icon: 'Undo', mark: null },
   { command: EditorCommand.REDO, label: 'Redo', icon: 'Redo', mark: null },
 ];
@@ -36,51 +42,57 @@ const isCommandDisabled = (
 
 /** Renders formatting and history commands connected to the editor context. */
 export default function Toolbar() {
-  const { activeMarks, runCommand, canUndo, canRedo } = useEditorContext();
+  const { activeMarks, runCommand, applyLink, selection, canUndo, canRedo } = useEditorContext();
+  const [isLinkOpen, setIsLinkOpen] = useState(false);
+  const [linkHref, setLinkHref] = useState('');
+
+  /** Opens the link form while preserving the current editor selection. */
+  const openLinkForm = () => {
+    setIsLinkOpen(true);
+    setLinkHref('');
+  };
+
+  /** Applies the entered URL and closes the link form. */
+  const submitLink = (href: string, nextSelection: typeof selection) => {
+    applyLink(href, nextSelection);
+    setIsLinkOpen(false);
+  };
 
   return (
     <div className="editor-toolbar">
       <div className="toolbar-group" role="group" aria-label="Text formatting">
-        {toolbarButtons.slice(0, 3).map(({ command, label, icon, mark }) => (
-          <button
+        {formattingButtons.map(({ command, label, icon, mark }) => (
+          <EditorButton
             key={command}
-            type="button"
-            aria-label={label}
-            aria-pressed={mark ? activeMarks.includes(mark) : undefined}
-            className={mark && activeMarks.includes(mark) ? 'is-active' : undefined}
-            title={label}
             disabled={isCommandDisabled(command, canUndo, canRedo)}
-            onMouseDown={(event) => event.preventDefault()}
-            onClick={() => runCommand(command)}
-          >
-            <span
-              aria-hidden="true"
-              className={`toolbar-icon toolbar-icon-${command.toLowerCase()}`}
-            >
-              {icon}
-            </span>
-          </button>
+            icon={icon}
+            iconClassName={`toolbar-icon-${command.toLowerCase()}`}
+            isActive={Boolean(mark && activeMarks.includes(mark))}
+            label={label}
+            onClick={command === EditorCommand.SET_LINK ? openLinkForm : () => runCommand(command)}
+          />
         ))}
+        {isLinkOpen && (
+          <LinkPopover
+            href={linkHref}
+            selection={selection}
+            onHrefChange={setLinkHref}
+            onSubmit={submitLink}
+            onCancel={() => setIsLinkOpen(false)}
+          />
+        )}
       </div>
       <span className="toolbar-divider" aria-hidden="true" />
       <div className="toolbar-group toolbar-history" role="group" aria-label="History">
-        {toolbarButtons.slice(3).map(({ command, label, icon }) => (
-          <button
+        {historyButtons.map(({ command, label, icon }) => (
+          <EditorButton
             key={command}
-            type="button"
-            aria-label={label}
-            title={label}
             disabled={isCommandDisabled(command, canUndo, canRedo)}
-            onMouseDown={(event) => event.preventDefault()}
+            icon={icon}
+            iconClassName={`toolbar-icon-${command.toLowerCase()}`}
+            label={label}
             onClick={() => runCommand(command)}
-          >
-            <span
-              aria-hidden="true"
-              className={`toolbar-icon toolbar-icon-${command.toLowerCase()}`}
-            >
-              {icon}
-            </span>
-          </button>
+          />
         ))}
       </div>
     </div>
