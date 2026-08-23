@@ -12,6 +12,7 @@ import {
 } from './editor';
 
 const useEditorState = () => {
+  // Builds the context view model around the editor reducer.
   const [editorState, dispatch] = useReducer(editorReducer, undefined, createInitialState);
 
   const activeMarks = useMemo(() => selectActiveMarks(editorState), [editorState]);
@@ -63,6 +64,7 @@ type EditorViewModel = ReturnType<typeof useEditorState>;
 const EditorContext = createContext<EditorViewModel | null>(null);
 
 export const EditorProvider = ({ children }: { children: ReactNode }) => {
+  // Makes editor state and commands available to all editor descendants.
   const editorViewModel = useEditorState();
 
   return createElement(EditorContext.Provider, { value: editorViewModel }, children);
@@ -70,6 +72,7 @@ export const EditorProvider = ({ children }: { children: ReactNode }) => {
 
 export const useEditor = () => useEditorContext();
 
+// Reads editor context and fails early when used outside its provider.
 export const useEditorContext = (): EditorViewModel => {
   const editorContext = useContext(EditorContext);
 

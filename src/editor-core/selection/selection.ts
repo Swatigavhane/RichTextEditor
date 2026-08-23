@@ -30,6 +30,7 @@ const getBlockIndexById = (documentModel: Document, blockId: string): number => 
   return blockIndex === -1 ? 0 : blockIndex;
 };
 
+// Clamps a selection point to a valid block and text offset.
 export const clampSelectionPoint = (
   documentModel: Document,
   point: SelectionPoint,
@@ -43,6 +44,7 @@ export const clampSelectionPoint = (
     offset: clampOffset(point.offset, 0, blockLength),
   };
 };
+// Normalizes both endpoints of a selection against the current document.
 
 export const normalizeSelectionRange = (
   documentModel: Document,
@@ -70,6 +72,7 @@ export const selectionPointToLinearOffset = (
   );
 };
 
+// Converts a block-based selection into document-wide offsets.
 export const selectionRangeToLinearRange = (
   documentModel: Document,
   selectionRange: EditorSelection,
@@ -84,6 +87,7 @@ export const selectionRangeToLinearRange = (
     isBackward: anchor > focus,
   };
 };
+// Converts a document-wide offset into a block-based selection point.
 
 export const linearOffsetToSelectionPoint = (
   documentModel: Document,
@@ -103,6 +107,7 @@ export const linearOffsetToSelectionPoint = (
         offset: clampOffset(remainingOffset, 0, blockLength),
       };
     }
+    // Converts document-wide offsets back into model selection endpoints.
 
     remainingOffset -= blockLength + BLOCK_SEPARATOR_LENGTH;
   }

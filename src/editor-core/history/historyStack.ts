@@ -11,12 +11,14 @@ export type HistoryStack<TState> = {
   future: HistoryEntry<TState>[];
 };
 
+// Creates a history stack containing the initial editor state.
 export const createHistoryStack = <TState>(initialState: TState): HistoryStack<TState> => ({
   past: [],
   present: { state: initialState, timestamp: Date.now() },
   future: [],
 });
 
+// Adds a new state and clears redo history, coalescing related changes when possible.
 export const pushHistoryEntry = <TState>(
   stack: HistoryStack<TState>,
   nextEntry: HistoryEntry<TState>,
@@ -44,6 +46,7 @@ export const pushHistoryEntry = <TState>(
   };
 };
 
+// Moves the latest past state into the current history position.
 export const undoHistory = <TState>(stack: HistoryStack<TState>): HistoryStack<TState> => {
   if (stack.past.length === 0) {
     return stack;
@@ -58,6 +61,7 @@ export const undoHistory = <TState>(stack: HistoryStack<TState>): HistoryStack<T
   };
 };
 
+// Moves the next future state into the current history position.
 export const redoHistory = <TState>(stack: HistoryStack<TState>): HistoryStack<TState> => {
   if (stack.future.length === 0) {
     return stack;

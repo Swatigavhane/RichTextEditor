@@ -110,6 +110,7 @@ const transformBlockRange = (
   };
 };
 
+// Applies or removes one mark across every block touched by a selection.
 export const applyMarkMutation = (
   documentModel: Document,
   selectionRange: SelectionRange,

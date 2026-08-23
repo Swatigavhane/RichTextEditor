@@ -42,6 +42,7 @@ export const getMarkCoverage = (
   return 'partial';
 };
 
+// Toggles a mark across the selected text based on its current coverage.
 export const toggleInlineMark = (
   documentModel: Document,
   selectionRange: SelectionRange,
@@ -66,6 +67,7 @@ export const applyInlineMark = (
   mark: InlineMark,
 ): Document => applyMarkMutation(documentModel, selectionRange, mark, 'add');
 
+// Removes a mark from the selected text.
 export const clearInlineMark = (
   documentModel: Document,
   selectionRange: SelectionRange,

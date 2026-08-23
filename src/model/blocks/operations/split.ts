@@ -44,6 +44,7 @@ const splitSpanCollection = (
   return { leftSpans, rightSpans };
 };
 
+// Splits one block at a text offset and returns the left and right blocks.
 export const splitBlock = (block: Block, offset: number): [Block, Block] => {
   const safeOffset = clampOffset(offset, 0, getBlockTextLength(block));
   const { leftSpans, rightSpans } = splitSpanCollection(block.children, safeOffset);

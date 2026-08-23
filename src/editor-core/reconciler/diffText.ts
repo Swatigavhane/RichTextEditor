@@ -38,6 +38,7 @@ const trimCommonSuffix = (
   return { beforeEnd, afterEnd };
 };
 
+// Calculates the smallest replacement needed to transform one text value into another.
 export const diffText = (beforeText: string, afterText: string): TextDiff => {
   const start = findCommonPrefixLength(beforeText, afterText);
   const { beforeEnd, afterEnd } = trimCommonSuffix(beforeText, afterText, start);

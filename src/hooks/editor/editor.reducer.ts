@@ -23,6 +23,7 @@ const withSelection = (
   selection,
 });
 
+// Commits a document change and records the resulting snapshot in history.
 const commitDocumentChange = (
   state: EditorState,
   documentModel: EditorState['documentModel'],
@@ -49,6 +50,7 @@ const restoreHistory = (
   history,
 });
 
+// Creates the initial empty document state and history entry.
 export const createInitialState = (): EditorState => {
   const documentModel = createEmptyDocument();
   const selection = buildSelection(INITIAL_BLOCK_ID, 0, INITIAL_BLOCK_ID, 0);
@@ -60,6 +62,7 @@ export const createInitialState = (): EditorState => {
   };
 };
 
+// Applies editor actions to document, selection, and history state.
 export const editorReducer = (state: EditorState, action: EditorAction): EditorState => {
   switch (action.type) {
     case EDITOR_ACTIONS.SET_SELECTION:

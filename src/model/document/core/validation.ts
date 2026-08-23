@@ -26,5 +26,6 @@ const isParagraphBlock = (value: unknown): value is ParagraphBlock =>
   Array.isArray(value.children) &&
   value.children.every(isTextSpan);
 
+// Checks whether unknown input matches the document model schema.
 export const isDocumentModel = (value: unknown): value is DocumentModel =>
   isObject(value) && Array.isArray(value.blocks) && value.blocks.every(isParagraphBlock);

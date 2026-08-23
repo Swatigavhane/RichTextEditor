@@ -46,6 +46,7 @@ const normalizeBlock = (block: ParagraphBlock): ParagraphBlock => ({
   children: normalizeSpans(block.children),
 });
 
+// Ensures a document always contains normalized paragraph blocks.
 export const normalizeBlocks = (blocks: ParagraphBlock[]): ParagraphBlock[] => {
   if (blocks.length === 0) {
     return [
@@ -60,6 +61,7 @@ export const normalizeBlocks = (blocks: ParagraphBlock[]): ParagraphBlock[] => {
   return blocks.map(normalizeBlock);
 };
 
+// Normalizes the full document structure and its text spans.
 export const normalizeDocumentModel = (documentModel: DocumentModel): DocumentModel => ({
   blocks: normalizeBlocks(documentModel.blocks),
 });

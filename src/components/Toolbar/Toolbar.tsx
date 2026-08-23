@@ -33,6 +33,7 @@ const isCommandDisabled = (
   return false;
 };
 
+// Renders formatting and history commands connected to the editor context.
 export default function Toolbar() {
   const { activeMarks, runCommand, canUndo, canRedo } = useEditorContext();
 
@@ -58,7 +59,7 @@ export default function Toolbar() {
         ))}
       </div>
       <span className="toolbar-divider" aria-hidden="true" />
-      <div className="toolbar-group" role="group" aria-label="History">
+      <div className="toolbar-group toolbar-history" role="group" aria-label="History">
         {toolbarButtons.slice(3).map(({ command, label, icon }) => (
           <button
             key={command}

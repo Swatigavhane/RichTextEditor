@@ -5,6 +5,7 @@ import { getDocumentText } from '../../model';
 import type { Document } from '../../model';
 
 export default function Editor() {
+  // Reads document state from context and renders the editor workspace.
   const editorViewModel = useEditorContext();
   const wordCount = getDocumentText(editorViewModel.documentModel)
     .trim()
@@ -21,7 +22,7 @@ export default function Editor() {
           ))}
         </div>
         <footer className="editor-footer">
-          <span>{wordCount === 1 ? '1 word' : `${wordCount} words`}</span>
+          <span>{`${wordCount} words`}</span>
         </footer>
         {/* <pre className="document-preview">{formattedDocument}</pre> */}
       </section>

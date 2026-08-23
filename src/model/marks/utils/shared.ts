@@ -13,6 +13,7 @@ export type SpanVisitor = (span: TextSpan, overlapLength: number) => void;
 export const markKey = (mark: InlineMark): string =>
   typeof mark === 'string' ? mark : `${mark.type}:${mark.href}`;
 
+// Converts a block index into its document-wide starting offset.
 export const getBlockStartOffset = (documentModel: Document, blockIndex: number): number => {
   let offset = 0;
 
@@ -33,20 +34,24 @@ export const findBlockIndexById = (documentModel: Document, blockId: string): nu
   return index === -1 ? 0 : index;
 };
 
+// Clones a mark array without sharing link object references.
 export const cloneMarks = (marks: InlineMark[]): InlineMark[] =>
   marks.map((mark) => (typeof mark === 'string' ? mark : { ...mark }));
 
+// Creates a copy of a text span and its marks.
 export const cloneSpan = (span: TextSpan): TextSpan => ({
   text: span.text,
   marks: cloneMarks(span.marks),
 });
 
+// Creates a copy of a block and its child spans.
 export const cloneBlock = (block: Block): Block => ({
   type: block.type,
   id: block.id,
   children: block.children.map(cloneSpan),
 });
 
+// Resolves normalized linear start and end offsets for a selection.
 export const getLinearSelectionBounds = (
   documentModel: Document,
   selectionRange: SelectionRange,
@@ -60,6 +65,7 @@ export const getLinearSelectionBounds = (
     end: linearRange.end,
   };
 };
+// Visits each text span that overlaps a document-wide selection.
 
 export const forEachSelectedSpan = (
   documentModel: Document,

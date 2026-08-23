@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import type { Block as BlockModel } from '../../model';
+import type { EditorSelection } from '../../editor-core/selection';
 import { useEditorContext } from '../../hooks';
 
 type BlockProps = {
@@ -64,6 +65,31 @@ const getDomPoint = (root: Node, offset: number): { node: Node; offset: number }
   return { node: root, offset: root.childNodes.length };
 };
 
+const getModelSelection = (element: HTMLDivElement, blockId: string): EditorSelection | null => {
+  const domSelection = getValidDomSelection(window.getSelection());
+
+  if (!domSelection) {
+    return null;
+  }
+
+  const range = domSelection.getRangeAt(0);
+
+  if (!element.contains(range.commonAncestorContainer)) {
+    return null;
+  }
+
+  return {
+    anchor: {
+      blockId,
+      offset: getTextOffset(element, domSelection.anchorNode, domSelection.anchorOffset),
+    },
+    focus: {
+      blockId,
+      offset: getTextOffset(element, domSelection.focusNode, domSelection.focusOffset),
+    },
+  };
+};
+
 const escapeHtml = (value: string): string =>
   value
     .replace(/&/g, '&amp;')
@@ -72,6 +98,7 @@ const escapeHtml = (value: string): string =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
+// Renders one editable document block and synchronizes its DOM selection with the model.
 export default function Block({ block }: BlockProps) {
   const { selection, applyInput, setSelection } = useEditorContext();
   const blockRef = useRef<HTMLDivElement>(null);
@@ -126,36 +153,11 @@ export default function Block({ block }: BlockProps) {
   }, [block.id, selection, text]);
 
   const handleSelect = (event: React.SyntheticEvent<HTMLDivElement>) => {
-    const domSelection = getValidDomSelection(window.getSelection());
+    const nextSelection = getModelSelection(event.currentTarget, block.id);
 
-    if (!domSelection) {
-      return;
+    if (nextSelection) {
+      setSelection(nextSelection);
     }
-
-    const range = domSelection.getRangeAt(0);
-
-    if (!event.currentTarget.contains(range.commonAncestorContainer)) {
-      return;
-    }
-
-    setSelection({
-      anchor: {
-        blockId: block.id,
-        offset: getTextOffset(
-          event.currentTarget,
-          domSelection.anchorNode,
-          domSelection.anchorOffset,
-        ),
-      },
-      focus: {
-        blockId: block.id,
-        offset: getTextOffset(
-          event.currentTarget,
-          domSelection.focusNode,
-          domSelection.focusOffset,
-        ),
-      },
-    });
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -185,7 +187,13 @@ export default function Block({ block }: BlockProps) {
       aria-label="Editor text"
       suppressContentEditableWarning
       dangerouslySetInnerHTML={{ __html: renderedHtml }}
-      onInput={(event) => applyInput(text, event.currentTarget.textContent ?? '', selection)}
+      onInput={(event) =>
+        applyInput(
+          text,
+          event.currentTarget.textContent ?? '',
+          getModelSelection(event.currentTarget, block.id) ?? selection,
+        )
+      }
       onSelect={handleSelect}
       onKeyDown={handleKeyDown}
     />

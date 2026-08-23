@@ -11,17 +11,21 @@ export const createParagraph = (id: string, text = ''): ParagraphBlock => ({
   children: text.length > 0 ? [{ text, marks: [] }] : [EMPTY_TEXT_SPAN],
 });
 
+// Creates a document with one empty paragraph.
 export const createEmptyDocument = (): DocumentModel => ({
   blocks: [createParagraph(DEFAULT_BLOCK_ID)],
 });
 
+// Normalizes every block and text run in a document.
 export const normalizeDocument = (documentModel: DocumentModel): DocumentModel => ({
   blocks: normalizeDocumentModel(documentModel).blocks,
 });
 
+// Serializes a normalized document to JSON.
 export const serializeDocument = (documentModel: DocumentModel): string =>
   JSON.stringify(normalizeDocument(documentModel));
 
+// Parses and validates a serialized document before normalizing it.
 export const deserializeDocument = (serializedDocument: string): DocumentModel => {
   const parsedDocument = JSON.parse(serializedDocument) as unknown;
 

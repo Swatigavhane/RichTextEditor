@@ -28,6 +28,7 @@ const updateSelectionAfterRangeChange = (
   };
 };
 
+// Replaces the selected range with text and returns the updated document and caret.
 export const replaceSelectionWithText = (
   documentModel: Document,
   selectionRange: SelectionRange,

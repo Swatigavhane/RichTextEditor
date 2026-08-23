@@ -54,5 +54,6 @@ const COMMAND_TO_MARK = new Map(
   TOOLBAR_COMMANDS.map((command) => [command.id, command.mark] as const),
 );
 
+// Resolves a toolbar command to the inline mark it changes.
 export const resolveEditorCommandMark = (command: EditorCommandId): Mark | undefined =>
   COMMAND_TO_MARK.get(command);

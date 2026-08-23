@@ -52,6 +52,10 @@ button {
   gap: 4px;
 }
 
+.toolbar-history {
+  gap: 2px;
+}
+
 .toolbar-divider {
   width: 1px;
   height: 24px;
@@ -135,8 +139,8 @@ h1 {
   background: rgba(255, 248, 239, 0.025);
   color: #fff8ef;
   font-family: Georgia, serif;
-  font-size: 1.18rem;
-  line-height: 1.8;
+  font-size: 0.9rem;
+  line-height: 1.5;
   white-space: pre-wrap;
 }
 
@@ -180,9 +184,9 @@ h1 {
 button {
   border: 0;
   border-radius: 7px;
-  min-width: 36px;
-  height: 36px;
-  padding: 0 10px;
+  min-width: 32px;
+  height: 30px;
+  padding: 0 7px;
   background: linear-gradient(135deg, #ff9f5a, #ff7143);
   color: #1b0f08;
   font-weight: 700;

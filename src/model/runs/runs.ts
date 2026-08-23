@@ -7,11 +7,13 @@ const sameMarks = (left: Mark[], right: Mark[]): boolean =>
   left.length === right.length &&
   left.every((mark, index) => markSignature(mark) === markSignature(right[index]));
 
+// Splits a text run while copying its formatting marks to both pieces.
 export const splitRunAt = (run: TextRun, offset: number): [TextRun, TextRun] => [
   { text: run.text.slice(0, offset), marks: [...run.marks] },
   { text: run.text.slice(offset), marks: [...run.marks] },
 ];
 
+// Merges neighboring runs that have identical marks.
 export const mergeAdjacentRuns = (runs: TextRun[]): TextRun[] => {
   const mergedRuns: TextRun[] = [];
 
@@ -33,4 +35,5 @@ export const mergeAdjacentRuns = (runs: TextRun[]): TextRun[] => {
   return mergedRuns;
 };
 
+// Canonicalizes a run collection by merging compatible neighbors.
 export const normalizeRuns = (runs: TextRun[]): TextRun[] => mergeAdjacentRuns(runs);
