@@ -58,6 +58,58 @@ The application state is managed by `editorReducer` and exposed through `EditorP
 
 Input changes are reconciled by comparing the previous and current text values. The resulting diff is applied to the document model, the caret is normalized, and the change is added to the history stack. Undo and redo restore both the document and its selection.
 
+## High-Level Design
+
+The editor follows one central rule: the document model owns the content, and the DOM only displays it and reports user input.
+
+### Runtime Flow
+
+1. `App` creates an `EditorProvider` around the editor workspace.
+2. `EditorProvider` owns the reducer state, current selection, commands, and history.
+3. `Editor` reads the current document from context and renders the toolbar and editable block.
+4. `Block` reads browser input and selection events from the `contenteditable` surface.
+5. Input is converted into a typed reducer action and reconciled into the document model.
+6. React renders the updated model back into the block, and the caret is restored from model offsets.
+7. `Toolbar` dispatches formatting, link, undo, and redo commands through the same context.
+
+```mermaid
+flowchart LR
+   User[User input] --> Block[Editable Block]
+   Block --> Reconciler[Text diff and selection mapping]
+   Reconciler --> Reducer[Editor Reducer]
+   Toolbar[Toolbar commands] --> Reducer
+   Reducer --> Model[Document Model]
+   Model --> History[Undo/Redo History]
+   Model --> Block
+   Reducer --> Selection[Model Selection]
+   Selection --> Block
+```
+
+### Main Responsibilities
+
+| Area                      | Responsibility                                                                         |
+| ------------------------- | -------------------------------------------------------------------------------------- |
+| `model/`                  | Defines documents, blocks, text runs, marks, normalization, and replacement operations |
+| `editor-core/reconciler/` | Converts browser text changes into model updates                                       |
+| `editor-core/selection/`  | Converts and clamps selection positions between DOM and model coordinates              |
+| `editor-core/history/`    | Stores document and selection snapshots for undo and redo                              |
+| `hooks/editor/`           | Defines reducer state, actions, commands, and selectors                                |
+| `hooks/useEditor.ts`      | Exposes editor state and actions through React context                                 |
+| `components/Block/`       | Projects model content into the editable DOM and captures browser events               |
+| `components/Toolbar/`     | Presents formatting, link, and history actions                                         |
+
+### Example State Flow
+
+When a user selects `hello` and clicks Bold:
+
+1. `Block` stores the selection as block ID plus character offsets.
+2. `Toolbar` dispatches the Bold command through context.
+3. The reducer calls the mark operation for the selected range.
+4. The model is normalized and stored in history with its selection.
+5. `Block` renders the marked run and restores the selection.
+
+For more detail, see [ARCHITECTURE.md](ARCHITECTURE.md) and [DECISIONS.md](DECISIONS.md).
+
 ## Project Structure
 
 ```text

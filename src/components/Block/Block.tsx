@@ -103,13 +103,9 @@ const escapeHtml = (value: string): string =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
-/** Renders one editable block and synchronizes its DOM selection with the model. */
-export default function Block({ block }: BlockProps) {
-  const { selection, applyInput, setSelection, insertNewline } = useEditorContext();
-  const blockRef = useRef<HTMLDivElement>(null);
-  const text = block.children.map((run) => run.text).join('');
-
-  const renderedHtml = block.children
+/** Converts block text runs into escaped HTML with their inline formatting. */
+const renderBlockHtml = (block: BlockModel): string =>
+  block.children
     .map((run) => {
       const hasBold = run.marks.includes('bold');
       const hasItalic = run.marks.includes('italic');
@@ -130,6 +126,14 @@ export default function Block({ block }: BlockProps) {
         : escapeHtml(run.text);
     })
     .join('');
+
+/** Renders one editable block and synchronizes its DOM selection with the model. */
+export default function Block({ block }: BlockProps) {
+  const { selection, applyInput, setSelection, insertNewline, insertText } = useEditorContext();
+  const blockRef = useRef<HTMLDivElement>(null);
+  const text = block.children.map((run) => run.text).join('');
+
+  const renderedHtml = renderBlockHtml(block);
 
   /** Restores the model selection after React updates the editable DOM. */
   useLayoutEffect(() => {
@@ -167,16 +171,24 @@ export default function Block({ block }: BlockProps) {
     }
   };
 
-  /** Inserts a newline when Enter is pressed inside the block. */
+  /** Inserts a newline or space when the corresponding key is pressed. */
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key !== 'Enter') {
+    const isSpaceKey = event.key === ' ' || event.key === 'Spacebar' || event.code === 'Space';
+
+    if (event.key !== 'Enter' && !isSpaceKey) {
       return;
     }
 
     const currentSelection = getModelSelection(event.currentTarget, block.id) ?? selection;
 
     event.preventDefault();
-    insertNewline(currentSelection);
+
+    if (event.key === 'Enter') {
+      insertNewline(currentSelection);
+      return;
+    }
+
+    insertText(' ', currentSelection);
   };
 
   return (

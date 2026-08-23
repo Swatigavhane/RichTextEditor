@@ -21,7 +21,6 @@ export default function Editor() {
         <footer className="editor-footer">
           <span>{`${wordCount} words`}</span>
         </footer>
-        {/* <pre className="document-preview">{formattedDocument}</pre> */}
       </section>
     </main>
   );

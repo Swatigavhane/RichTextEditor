@@ -69,6 +69,13 @@ export const applyInlineMark = (
   mark: InlineMark,
 ): Document => applyMarkMutation(documentModel, selectionRange, mark, 'add');
 
+/** Removes a mark from every text range covered by the selection. */
+export const clearInlineMark = (
+  documentModel: Document,
+  selectionRange: SelectionRange,
+  mark: InlineMark,
+): Document => applyMarkMutation(documentModel, selectionRange, mark, 'remove');
+
 /** Returns the distinct marks present in the selected text. */
 export const getSelectionMarks = (
   documentModel: Document,

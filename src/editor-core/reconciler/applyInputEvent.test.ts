@@ -50,6 +50,17 @@ describe('apply input event', () => {
     expect(getDocumentText(result)).toBe('HeXllo');
   });
 
+  it('preserves a space inserted between words', () => {
+    const documentModel = buildDocument(['joejohn']);
+    const result = applyInputEvent(documentModel, {
+      beforeText: 'joejohn',
+      afterText: 'joe john',
+      selection: buildSelection('block-1', 3, 'block-1', 3),
+    });
+
+    expect(getDocumentText(result)).toBe('joe john');
+  });
+
   it('reconciles deletion using selected range', () => {
     const documentModel = buildDocument(['Hello']);
     const result = applyInputEvent(documentModel, {

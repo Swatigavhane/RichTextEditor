@@ -1,6 +1,5 @@
 import type { Document } from '../../model';
 import { replaceSelectionWithText } from '../../model';
-import { isSelectionCollapsed } from '../selection';
 import type { EditorSelection } from '../selection';
 import { buildSelection } from '../../utils/buildSelection';
 import { diffText } from './diffText';
@@ -39,15 +38,13 @@ const replaceFirstBlockText = (documentModel: Document, text: string): Document 
 // Applies a browser text edit to the document model using the current selection.
 export const applyInputEvent = (documentModel: Document, change: InputEventChange): Document => {
   const textDiff = diffText(change.beforeText, change.afterText);
-  const selection =
-    textDiff.deletedText.length > 0 && isSelectionCollapsed(change.selection)
-      ? buildSelection(
-          change.selection.anchor.blockId,
-          textDiff.start,
-          change.selection.anchor.blockId,
-          textDiff.start + textDiff.deletedText.length,
-        )
-      : change.selection;
+  const blockId = change.selection.anchor.blockId;
+  const selection = buildSelection(
+    blockId,
+    textDiff.start,
+    blockId,
+    textDiff.start + textDiff.deletedText.length,
+  );
   const nextDocument = replaceSelectionWithText(
     documentModel,
     selection,

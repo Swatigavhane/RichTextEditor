@@ -69,7 +69,13 @@ export default function Toolbar() {
             iconClassName={`toolbar-icon-${command.toLowerCase()}`}
             isActive={Boolean(mark && activeMarks.includes(mark))}
             label={label}
-            onClick={command === EditorCommand.SET_LINK ? openLinkForm : () => runCommand(command)}
+            onClick={
+              command === EditorCommand.SET_LINK
+                ? activeMarks.includes('link')
+                  ? () => runCommand(EditorCommand.REMOVE_LINK)
+                  : openLinkForm
+                : () => runCommand(command)
+            }
           />
         ))}
         {isLinkOpen && (

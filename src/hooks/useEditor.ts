@@ -54,6 +54,11 @@ const useEditorState = () => {
     dispatch({ type: EDITOR_ACTIONS.INSERT_NEWLINE, selection });
   };
 
+  /** Inserts literal text at the current selection. */
+  const insertText = (text: string, selection: EditorSelection) => {
+    dispatch({ type: EDITOR_ACTIONS.INSERT_TEXT, text, selection });
+  };
+
   /** Applies a URL link mark to the current selection. */
   const applyLink = (href: string, selection: EditorSelection) => {
     dispatch({ type: EDITOR_ACTIONS.APPLY_LINK, href, selection });
@@ -68,6 +73,7 @@ const useEditorState = () => {
     runCommand,
     applyInput,
     insertNewline,
+    insertText,
     applyLink,
     canUndo: editorState.history.past.length > 0,
     canRedo: editorState.history.future.length > 0,

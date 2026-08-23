@@ -51,7 +51,15 @@ const removeMark = (marks: InlineMark[], mark: InlineMark): InlineMark[] => {
   }
 
   return marks
-    .filter((currentMark) => markKey(currentMark) !== markKey(mark))
+    .filter((currentMark) => {
+      const isSameMarkType =
+        typeof currentMark === 'object' &&
+        typeof mark === 'object' &&
+        currentMark.type === mark.type;
+      const isLinkMark = typeof mark === 'object' && mark.type === 'link';
+
+      return !(isSameMarkType && (isLinkMark || markKey(currentMark) === markKey(mark)));
+    })
     .map((currentMark) => (typeof currentMark === 'string' ? currentMark : { ...currentMark }));
 };
 

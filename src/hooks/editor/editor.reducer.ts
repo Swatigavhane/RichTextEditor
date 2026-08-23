@@ -1,12 +1,13 @@
 import { buildSelection } from '../../utils/buildSelection';
 import {
   applyInlineMark,
+  clearInlineMark,
   createEmptyDocument,
   replaceSelectionWithText,
   toggleInlineMark,
 } from '../../model';
 import { normalizeSelectionRange } from '../../editor-core/selection';
-import { resolveEditorCommandMark } from '../../editor-core/commands';
+import { EditorCommand, resolveEditorCommandMark } from '../../editor-core/commands';
 import { applyInputEvent } from '../../editor-core/reconciler';
 import { diffText } from '../../editor-core/reconciler/diffText';
 import {
@@ -75,6 +76,16 @@ export const editorReducer = (state: EditorState, action: EditorAction): EditorS
     case EDITOR_ACTIONS.SET_SELECTION:
       return withSelection(state, action.selection);
     case EDITOR_ACTIONS.RUN_COMMAND: {
+      if (action.command === EditorCommand.REMOVE_LINK) {
+        return commitDocumentChange(
+          state,
+          clearInlineMark(state.documentModel, state.selection, {
+            type: 'link',
+            href: '',
+          }),
+        );
+      }
+
       const commandMark = resolveEditorCommandMark(action.command);
 
       if (!commandMark) {
@@ -114,6 +125,16 @@ export const editorReducer = (state: EditorState, action: EditorAction): EditorS
     }
     case EDITOR_ACTIONS.INSERT_NEWLINE: {
       const result = replaceSelectionWithText(state.documentModel, action.selection, '\n', []);
+
+      return commitDocumentChange(state, result.document, result.selection);
+    }
+    case EDITOR_ACTIONS.INSERT_TEXT: {
+      const result = replaceSelectionWithText(
+        state.documentModel,
+        action.selection,
+        action.text,
+        [],
+      );
 
       return commitDocumentChange(state, result.document, result.selection);
     }

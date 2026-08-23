@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getSelectionMarks, toggleInlineMark } from './marks';
+import { clearInlineMark, getSelectionMarks, toggleInlineMark } from './marks';
 import { normalizeDocument } from '../document';
 import { buildSelection } from '../../utils';
 
@@ -92,5 +92,24 @@ describe('mark helpers', () => {
     const collapsed = buildSelection('block-1', 4, 'block-1', 4);
 
     expect(toggleInlineMark(documentModel, collapsed, 'bold')).toEqual(documentModel);
+  });
+
+  it('removes a link regardless of its URL', () => {
+    const documentModel = normalizeDocument({
+      blocks: [
+        {
+          type: 'paragraph',
+          id: 'block-1',
+          children: [{ text: 'Hello', marks: [{ type: 'link', href: 'https://example.com' }] }],
+        },
+      ],
+    });
+
+    expect(
+      clearInlineMark(documentModel, buildSelection('block-1', 0, 'block-1', 5), {
+        type: 'link',
+        href: '',
+      }).blocks[0].children,
+    ).toEqual([{ text: 'Hello', marks: [] }]);
   });
 });
